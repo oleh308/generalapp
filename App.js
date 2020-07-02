@@ -47,6 +47,10 @@ const App: () => React$Node = () => {
     setLoading(false);
   }
 
+  function getIsMentor() {
+    return SyncStorage.get('is_mentor');
+  }
+
   function getContent() {
     if (loading) {
       return (
@@ -60,7 +64,7 @@ const App: () => React$Node = () => {
           setAuthenticated: setAuthenticated,
           api: buildCall(setAuthenticated)
         }}>
-          {authenticated ? <MainTabs />
+          {authenticated ? <MainTabs isMentor={getIsMentor()}/>
             : <LoginStack />
           }
         </AuthenticationContext.Provider>

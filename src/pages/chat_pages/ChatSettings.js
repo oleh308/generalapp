@@ -12,6 +12,7 @@ import Modal from '../../components/blocks/Modal';
 import Layout from '../../components/blocks/Layout';
 import TopTabs from '../../components/blocks/TopTabs';
 import ActionButton from '../../components/buttons/ActionButton';
+import SmallUserImage from '../../components/blocks/SmallUserImage';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
 import { getImageUri, getName } from '../../utils/user.js';
@@ -182,7 +183,7 @@ function ChatSettings({ navigation, route }) {
     if (type === 'admin') {
       return <Text style={styles.labelText}>Admin</Text>;
     } else if (type === 'host') {
-      return <Text style={styles.labelText}>host</Text>;
+      return <Text style={styles.labelText}>Host</Text>;
     } else {
       return void(0);
     }
@@ -211,7 +212,7 @@ function ChatSettings({ navigation, route }) {
   function getUserView(user, type, index, last) {
     return (
       <View key={index} style={styles.profileContainer}>
-        <Image style={styles.profileImage} source={{ uri: getImageUri(user.image) }}/>
+        <SmallUserImage image={user.image} />
         <View style={styles.detailsContainer}>
           <Text style={styles.nameText}>{getName(user)}</Text>
           {getActions(user, type)}

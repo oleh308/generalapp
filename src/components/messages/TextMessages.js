@@ -6,8 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
+
+import SmallUserImage from '../blocks/SmallUserImage';
+
+import { commonStyles } from '../../styles';
 import { getImageUri } from '../../utils/user';
 import { getBasicUri } from '../../utils/image';
+
+import { LIGHT_GREY, BLACK, GREY, WHITE } from '../../constants/colours';
 
 function TextMessages({ block }) {
   const name = block?.author?.name;
@@ -25,22 +31,14 @@ function TextMessages({ block }) {
 
   function getMessages() {
     return block.messages.map((message, index) => {
-      const style = [styles.messageContainer, (block.messages.length - 1) === index ? {} : styles.messageMargin];
+      const style = [
+        commonStyles.shadow,
+        styles.messageContainer,
+        (block.messages.length - 1) === index ? {} : styles.messageMargin
+      ];
       return (
         <View key={index} style={style}>
-          {message.images && message.images.length > 0 && getImages(message.images)}
-          {message.text !== '' && <Text style={styles.messageText}>{message.text}</Text>}
-        </View>
-      )
-    })
-  }
-
-  function getMessages() {
-    return block.messages.map((message, index) => {
-      const style = [styles.messageContainer, (block.messages.length - 1) === index ? {} : styles.messageMargin];
-
-      return (
-        <View key={index} style={style}>
+          {index === 0 && <Text style={styles.nameText}>{name}</Text>}
           {message.images && message.images.length > 0 && getImages(message.images)}
           {message.text !== '' && <Text style={styles.messageText}>{message.text}</Text>}
         </View>
@@ -51,11 +49,10 @@ function TextMessages({ block }) {
   return (
     <View style={styles.blockContainer}>
       <View style={styles.messagesContainer}>
-        <Text>{name}</Text>
         {getMessages()}
       </View>
       <TouchableOpacity>
-        <Image style={styles.profileImage} source={{ uri: getImageUri(image) }} />
+        <SmallUserImage image={image} marginLeft={3} marginRight={10}/>
       </TouchableOpacity>
     </View>
   )
@@ -63,20 +60,26 @@ function TextMessages({ block }) {
 
 const styles = StyleSheet.create({
   blockContainer: {
-    width: '60%',
     marginBottom: 10,
     alignItems: 'flex-end',
     flexDirection: 'row-reverse',
   },
   messagesContainer: {
-    flex: 1
+    flex: 1,
+    alignItems: 'flex-start'
+  },
+  nameText: {
+    left: 7,
+    top: -18,
+    color: GREY,
+    position: 'absolute',
+    alignSelf: 'flex-start',
   },
   messageContainer: {
     padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'grey',
-    backgroundColor: 'white'
+    maxWidth: '60%',
+    borderRadius: 12,
+    backgroundColor: WHITE
   },
   messageMargin: {
     marginBottom: 5,

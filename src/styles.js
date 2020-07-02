@@ -14,5 +14,12 @@ export const commonStyles = StyleSheet.create({
   selectedOption: {
     borderBottomWidth: 1,
     borderBottomColor: 'grey'
+  },
+  shadow: {
+    elevation: 1,
+    shadowRadius: 1,
+    shadowOpacity: 0.75,
+    shadowColor: 'grey',
+    shadowOffset: { height: 0, width: 0 }
   }
 });

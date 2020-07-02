@@ -20,6 +20,7 @@ import SearchInput from '../components/blocks/SearchInput';
 import ActionButton from '../components/buttons/ActionButton';
 import SelectedProps from '../components/blocks/SelectedProps';
 
+import { commonStyles } from '../styles';
 import { LIGHT_GREY, BLUE, WHITE, GREY } from '../constants/colours';
 
 const hashtagsInit = [
@@ -32,7 +33,7 @@ const hashtagsInit = [
 function Create({ navigation, route }) {
   const apiUrl = SyncStorage.get('apiUrl');
   const token = SyncStorage.get('token');
-  const { post } = route.params ? route.params : {};
+  const { post } = route.params ? route.params : { post: null };
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   };
@@ -113,7 +114,7 @@ function Create({ navigation, route }) {
   function getImage() {
     if (image) {
       return (
-        <TouchableOpacity style={styles.imageContainer} onPress={chooseImage}>
+        <TouchableOpacity style={[styles.imageContainer, commonStyles.shadow]} onPress={chooseImage}>
           <Image source={{ uri: image.uri }} style={styles.image}/>
         </TouchableOpacity>
       );
@@ -180,12 +181,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 220,
+    marginTop: 2,
     width: '100%',
-    borderWidth: 1,
     paddingTop: 10,
-    borderRadius: 3,
+    borderRadius: 12,
     paddingBottom: 10,
-    borderColor: 'grey',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white'

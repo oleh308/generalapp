@@ -5,9 +5,9 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-function ActionButton({ title, marginLeft = 0, cb, colour, background }) {
+function ActionButton({ title, marginLeft = 0, cb, colour, background, height = 35 }) {
   const style = background ?
-    [styles.buttonContainer, { marginLeft, backgroundColor: background }, styles.shadow] :
+    [styles.buttonContainer, { marginLeft, height, backgroundColor: background }, styles.shadow] :
     [styles.buttonContainer, { marginLeft} ];
 
   return (
@@ -19,7 +19,6 @@ function ActionButton({ title, marginLeft = 0, cb, colour, background }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    height: 35,
     paddingLeft: 17,
     paddingRight: 17,
     borderRadius: 12,

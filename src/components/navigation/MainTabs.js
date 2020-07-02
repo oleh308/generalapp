@@ -18,7 +18,7 @@ import Timeline from '../../pages/Timeline.js';
 
 const Tab = createBottomTabNavigator();
 
-function MainTabs({setAuthenticated}) {
+function MainTabs({ isMentor }) {
   return (
     <ProfileProvider>
       <Tab.Navigator
@@ -45,7 +45,7 @@ function MainTabs({setAuthenticated}) {
       >
         <Tab.Screen name="TimelineStack" component={getMainStack('Timeline')} />
         <Tab.Screen name="SearchStack" component={getMainStack('Search')} />
-        <Tab.Screen name="CreateStack" component={getMainStack('Create')} />
+        {isMentor && <Tab.Screen name="CreateStack" component={getMainStack('Create')} />}
         <Tab.Screen name="ChatsStack" component={getMainStack('Chats')} />
         <Tab.Screen name="AccountStack" component={getMainStack('Account')} />
       </Tab.Navigator>

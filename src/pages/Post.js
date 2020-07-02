@@ -17,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchInput from '../components/blocks/SearchInput.js';
 import ActionButton from '../components/buttons/ActionButton';
 import SelectedProps from '../components/blocks/SelectedProps';
+import SmallUserImage from '../components/blocks/SmallUserImage';
 
 import { BLUE, WHITE } from '../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
@@ -117,7 +118,7 @@ function Post({ navigation, route }) {
       const name = comment.author && comment.author.name ? comment.author.name : '';
       return (
         <View key={index} style={styles.comment}>
-          <Image style={styles.authorImage} source={{ uri: getImageUri() }} />
+          <SmallUserImage image={comment.author.image}/>
           <View style={styles.commentText}>
             <Text style={styles.commentAuthor}>{name + ': '}</Text>
             <Text>{comment.text}</Text>
@@ -205,7 +206,7 @@ function Post({ navigation, route }) {
       <TouchableOpacity onPress={navigateProfile}>
         <View style={styles.postHeader}>
           <View style={styles.rowCenter}>
-            <Image style={styles.authorImage} source={{ uri: getImageUri(author.image) }} />
+            <SmallUserImage image={author.image}/>
             <View style={styles.authorName}>
               <Text>{getAuthorName()}</Text>
             </View>

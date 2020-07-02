@@ -1,5 +1,12 @@
 import React from 'react';
-import { TextInput, Text, StyleSheet, View } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+} from 'react-native';
+
+import { GREY } from '../../constants/colours';
 
 function SearchInput ({property, title, setProperty, placeholder, cb}) {
   return <View style={styles.inputContainer}>
@@ -21,15 +28,21 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
+    elevation: 1,
     width: '100%',
-    borderWidth: 1,
-    borderRadius: 3,
-    paddingLeft: '2%',
-    borderColor: 'grey',
-    backgroundColor: 'white'
+    shadowRadius: 1,
+    borderRadius: 10,
+    paddingLeft: '3%',
+    shadowOpacity: 0.75,
+    shadowColor: 'grey',
+    backgroundColor: 'white',
+    shadowOffset: { height: 0, width: 0 },
   },
   inputHeader: {
-    marginTop: 20
+    color: GREY,
+    marginTop: 10,
+    marginLeft: 7,
+    marginBottom: 2,
   },
 })
 

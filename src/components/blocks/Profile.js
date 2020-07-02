@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import {
   View,
   Text,
@@ -26,7 +26,6 @@ import { ProfileContext } from '../../context/ProfileContext';
 import { BLUE, RED_2, LIGHT_GREY, WHITE } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
-
 function Profile({ isEditable, id, navigation }) {
   const token = SyncStorage.get('token');
   const apiUrl = SyncStorage.get('apiUrl');
@@ -43,7 +42,7 @@ function Profile({ isEditable, id, navigation }) {
 
   const owner = user_id === id;
   const isMentor = details && details.mentor && details.mentor.status === 'approved';
-  console.log(isMentor, details)
+
   useEffect(() => {
     if (isFocused) getUser();
   }, [isFocused]);
@@ -297,11 +296,13 @@ function Profile({ isEditable, id, navigation }) {
           <Text style={styles.profileTitle}>About</Text>
           {getAbout(details.about)}
         </EditableAbout>
-        <Text style={styles.profileTitle}>Recent posts</Text>
-        <View>
-          {details.posts.map(getPost)}
-          {details.posts.length === 0 && <Text style={styles.addAbout}>No posts yet</Text>}
-        </View>
+        {isMentor && <Fragment>
+          <Text style={styles.profileTitle}>Recent posts</Text>
+          <View>
+            {details.posts.map(getPost)}
+            {details.posts.length === 0 && <Text style={styles.addAbout}>No posts yet</Text>}
+          </View>
+        </Fragment>}
       </View>
     </View> : <View />
 }

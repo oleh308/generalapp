@@ -10,13 +10,15 @@ import {
 
 import SyncStorage from 'sync-storage';
 import useKeyboard from '@rnhooks/keyboard';
-import { commonStyles } from '../styles.js';
 import Layout from '../components/blocks/Layout';
-import Basic from '../components/buttons/Basic';
-import { useIsFocused } from '@react-navigation/native';
 import SearchInput from '../components/inputs/SearchInput';
 import TimelinePost from '../components/blocks/TimelinePost';
+import ActionButton from '../components/buttons/ActionButton';
 import ProfilePreview from '../components/blocks/ProfilePreview';
+
+import { commonStyles } from '../styles.js';
+import { WHITE, BLUE } from '../constants/colours';
+import { useIsFocused } from '@react-navigation/native';
 import { AuthenticationContext } from '../context/AutheticationContext';
 
 let timeout = null;
@@ -219,7 +221,7 @@ function Search({ navigation }) {
           title={'Title, Topic or Name'}
         />
         <View style={styles.gap} />
-        <Basic cb={manageSearch} title={'Search'} />
+        <ActionButton title={'Search'} cb={manageSearch} colour={WHITE} background={BLUE} height={50}/>
       </View>
       <View style={styles.contentContainer}>
         {getSuggestions()}

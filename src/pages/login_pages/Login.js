@@ -33,11 +33,11 @@ const Login: () => React$Node = ({ login, navigation }) => {
         email: email.toLowerCase(),
       }
       const response = (await axios.post(apiUrl + '/api/auth/login', data)).data;
-
       setLoading(false);
       if (response.token) {
         SyncStorage.set('token', response.token);
         SyncStorage.set('user_id', response.user_id);
+        SyncStorage.set('is_mentor', response.is_mentor);
 
         if (response.first_login) {
           navigation.navigate('LoginInterests', { isMentor: true });
