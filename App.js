@@ -16,6 +16,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+Ionicons.loadFont();
 
 import SyncStorage from 'sync-storage';
 import buildCall from './src/utils/api';
