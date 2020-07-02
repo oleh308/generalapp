@@ -1,12 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -23,56 +15,67 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import 'react-native-gesture-handler';
+
+import SyncStorage from 'sync-storage';
+import buildCall from './src/utils/api';
+import { MaterialIndicator } from 'react-native-indicators';
+import MainTabs from './src/components/navigation/MainTabs';
+import LoginStack from './src/components/navigation/LoginStack';
+import { NavigationContainer } from '@react-navigation/native';
+import { AuthenticationContext } from './src/context/AutheticationContext';
+import './src/utils/api.js';
+
+SyncStorage.set('apiUrl', 'http://localhost:5000');
 
 const App: () => React$Node = () => {
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    init();
+  }, [])
+
+  async function init() {
+    const data = await SyncStorage.init();
+    let token = SyncStorage.get('token');
+    if (token) setAuthenticated(true);
+
+    setLoading(false);
+  }
+
+  function getContent() {
+    if (loading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <MaterialIndicator color="grey" />
+        </View>
+      )
+    } else {
+      return (
+        <AuthenticationContext.Provider value={{
+          setAuthenticated: setAuthenticated,
+          api: buildCall(setAuthenticated)
+        }}>
+          {authenticated ? <MainTabs />
+            : <LoginStack />
+          }
+        </AuthenticationContext.Provider>
+      )
+    }
+  }
+
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <NavigationContainer>
+      {getContent()}
+    </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },

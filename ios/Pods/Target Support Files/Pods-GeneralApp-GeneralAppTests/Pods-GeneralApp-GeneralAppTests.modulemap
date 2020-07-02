@@ -1,6 +1,0 @@
-module Pods_GeneralApp_GeneralAppTests {
-  umbrella header "Pods-GeneralApp-GeneralAppTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
