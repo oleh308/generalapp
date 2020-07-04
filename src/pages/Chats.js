@@ -12,39 +12,44 @@ import Layout from '../components/blocks/Layout';
 import TopTabs from '../components/blocks/TopTabs';
 import Loading from '../components/blocks/Loading';
 import { getImageUri, getName } from '../utils/user';
+import UserImage from '../components/blocks/UserImage';
 import { useIsFocused } from '@react-navigation/native';
 import { AuthenticationContext } from '../context/AutheticationContext';
 
 const options = ['Public', 'Private'];
 
 function Chats({ navigation, route }) {
-  const { api } = useContext(AuthenticationContext);
   const token = SyncStorage.get('token');
   const apiUrl = SyncStorage.get('apiUrl');
-  const { furtherNavigate } = route.params ? route.params : {};
 
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   };
   const isFocused = useIsFocused();
+  const { api } = useContext(AuthenticationContext);
 
   const [tab, setTab] = useState(0);
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchChats();
+    if (isFocused) fetchChats();
   }, [isFocused]);
 
   useEffect(() => {
-    if (furtherNavigate) {
-      navigation.navigate('SingleChat', { id: furtherNavigate });
+    const chatRedirect = SyncStorage.get('chatRedirect');
+
+    if (chatRedirect) {
+      const id = chatRedirect;
+      SyncStorage.remove('chatRedirect');
+      navigation.navigate('SingleChat', { id: id });
     }
-  }, [route.params])
+  }, [])
 
   async function fetchChats() {
     try {
       const data = (await api.get(apiUrl + '/api/chats', config)).data;
+      console.log(data);
       setChats(data);
     } catch (error) {
       if (error.response) {
@@ -65,17 +70,36 @@ function Chats({ navigation, route }) {
     return ((text).length > maxlimit) ? (((text).substring(0,maxlimit-3)) + '...') : text
   }
 
+  function getLastMessage(chat) {
+    if (chat.last_message) {
+      if (chat.last_message.text.trim() !== '') {
+        return chat.last_message.text;
+      } else if (chat.last_message.images.length > 0) {
+        return chat.last_message.images.length + ' images'
+      } else {
+        return ''
+      }
+    } else {
+      return '';
+    }
+  }
+
   function getChats(type) {
     return chats.filter(chat => chat.type === type).map((chat, index) => {
+      let hasNew = false;
+      if (chat.last_message && chat.last_seen_message) {
+        hasNew = chat.last_message._id !== chat.last_seen_message._id;
+      }
+
       return (
         <TouchableOpacity key={index} style={styles.chatContainer} onPress={() => navigateChat(chat)}>
-          <Image style={styles.chatImage} source={{ uri: getImageUri(chat.host.image, apiUrl) }} />
+          <UserImage image={chat.host.image} height={75}/>
           <View style={styles.chatText}>
             <Text style={styles.chatName}>{getName(chat.host)}</Text>
-            <Text>{'Nothing'}</Text>
+            <Text>{getLastMessage(chat)}</Text>
           </View>
           <View style={styles.dotContainer}>
-            {/*chat.isNew && <View style={styles.messageDot}/>*/}
+            {hasNew && <View style={styles.messageDot}/>}
           </View>
         </TouchableOpacity>
       )
@@ -101,7 +125,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     alignItems: 'center',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   chatImage: {
     width: 75,
@@ -109,6 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 37.5
   },
   chatText: {
+    flex: 1,
     marginLeft: 10
   },
   chatName: {
@@ -118,7 +143,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   dotContainer: {
-    flex: 1,
     height: 75,
     alignItems: 'center',
     justifyContent: 'center'

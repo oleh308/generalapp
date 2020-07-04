@@ -7,7 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import SmallUserImage from '../blocks/SmallUserImage';
+import UserImage from '../blocks/UserImage';
 
 import { commonStyles } from '../../styles';
 import { getImageUri } from '../../utils/user';
@@ -51,7 +51,7 @@ function MyTextMessages({ block }) {
         {getMessages()}
       </View>
       <TouchableOpacity>
-        <SmallUserImage image={image} marginLeft={10} marginRight={3}/>
+        <UserImage image={image} marginLeft={10} marginRight={3}/>
       </TouchableOpacity>
     </View>
   )
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     borderColor: '#E5E5E5'
   },
   imagesContainer: {
-    flex: 1,
+    minWidth: '100%',
   },
   imagePreview: {
     height: 120,

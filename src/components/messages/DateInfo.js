@@ -5,10 +5,12 @@ import {
   StyleSheet
 } from 'react-native';
 
+import { GREY } from '../../constants/colours';
+
 function DateInfo({ date }) {
   return (
     <View style={styles.dateContainer}>
-      <Text>{date}</Text>
+      <Text style={styles.dateText}>{date}</Text>
     </View>
   )
 }
@@ -21,7 +23,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   dateText: {
-    color: 'grey'
+    fontSize: 12,
+    color: GREY
   }
 })
 

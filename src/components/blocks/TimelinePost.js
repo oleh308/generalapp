@@ -11,7 +11,7 @@ import axios from 'axios';
 import moment from 'moment';
 import SyncStorage from 'sync-storage';
 import SelectedProps from './SelectedProps';
-import SmallUserImage from './SmallUserImage';
+import UserImage from './UserImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { LIGHT_GREY } from '../../constants/colours';
@@ -77,7 +77,7 @@ function TimelinePost({ post, navigation, owner, refresh, isEditable }) {
     if (owner) {
       return (
         <View style={styles.postHeader}>
-          <SmallUserImage image={author.image} />
+          <UserImage image={author.image} />
           <View style={styles.authorName}>
             <Text>{author.name + ' ' + author.surname}</Text>
           </View>
@@ -86,7 +86,7 @@ function TimelinePost({ post, navigation, owner, refresh, isEditable }) {
     } else {
       return (
         <TouchableOpacity style={styles.postHeader} onPress={openAuthor}>
-          <SmallUserImage image={author.image} />
+          <UserImage image={author.image} />
           <View style={styles.authorName}>
             <Text>{author.name + ' ' + author.surname}</Text>
           </View>

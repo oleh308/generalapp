@@ -6,6 +6,7 @@ import {
   View,
   Text,
 } from 'react-native';
+
 import io from 'socket.io-client';
 import SyncStorage from 'sync-storage';
 import Layout from '../components/blocks/Layout';

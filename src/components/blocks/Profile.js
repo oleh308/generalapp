@@ -131,14 +131,8 @@ function Profile({ isEditable, id, navigation }) {
   }
 
   function navigateChat(id) {
-    navigation.navigate('ChatsStack',
-      {
-        screen: 'Chats',
-        params: {
-          furtherNavigate: id
-        }
-      }
-    );
+    SyncStorage.set('chatRedirect', id);
+    navigation.navigate('ChatsStack', { screen: 'Chats' });
   }
 
   const getMentorTag = () => {

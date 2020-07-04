@@ -5,13 +5,37 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-function ActionButton({ title, marginLeft = 0, cb, colour, background, height = 35 }) {
-  const style = background ?
-    [styles.buttonContainer, { marginLeft, height, backgroundColor: background }, styles.shadow] :
-    [styles.buttonContainer, { marginLeft} ];
+function ActionButton({
+  cb,
+  title,
+  colour,
+  background,
+  height = 35,
+  marginTop = 0,
+  marginLeft = 0,
+  marginRight = 0
+}) {
+
+  function getStyles() {
+    let base = {
+      height,
+      marginTop,
+      marginLeft,
+      marginRight
+    }
+    let style = [styles.buttonContainer];
+    if (background) {
+      base = { ...base, backgroundColor: background };
+      style.push(styles.shadow);
+    }
+
+    style.push(base);
+
+    return style;
+  }
 
   return (
-    <TouchableOpacity style={style} onPress={cb}>
+    <TouchableOpacity style={getStyles()} onPress={cb}>
       <Text style={{color: colour}}>{title}</Text>
     </TouchableOpacity>
   )
