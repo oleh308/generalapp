@@ -11,13 +11,12 @@ import {
 import axios from 'axios';
 import moment from 'moment';
 import SyncStorage from 'sync-storage';
-import Layout from '../components/blocks/Layout.js';
-import AreaField from '../components/blocks/AreaField';
+import Layout from '../components/blocks/Layout';
+import AreaField from '../components/inputs/AreaField';
+import UserImage from '../components/blocks/UserImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SearchInput from '../components/blocks/SearchInput.js';
 import ActionButton from '../components/buttons/ActionButton';
 import SelectedProps from '../components/blocks/SelectedProps';
-import UserImage from '../components/blocks/UserImage';
 
 import { BLUE, WHITE } from '../constants/colours';
 import { useIsFocused } from '@react-navigation/native';

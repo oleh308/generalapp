@@ -8,13 +8,14 @@ import {
 } from 'react-native';
 
 import SyncStorage from 'sync-storage';
-import Layout from '../components/blocks/Layout';
-import TopTabs from '../components/blocks/TopTabs';
-import Loading from '../components/blocks/Loading';
-import { getImageUri, getName } from '../utils/user';
-import UserImage from '../components/blocks/UserImage';
+import Layout from '../../components/blocks/Layout';
+import TopTabs from '../../components/blocks/TopTabs';
+import Loading from '../../components/blocks/Loading';
+import UserImage from '../../components/blocks/UserImage';
+
+import { getImageUri, getName } from '../../utils/user';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AutheticationContext';
 
 const options = ['Public', 'Private'];
 

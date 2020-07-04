@@ -10,7 +10,7 @@ import {
 
 import SyncStorage from 'sync-storage';
 import Layout from '../../components/blocks/Layout';
-import InputField from '../../components/blocks/InputField';
+import InputField from '../../components/inputs/InputField';
 import ActionButton from '../../components/buttons/ActionButton';
 
 import { BLACK, WHITE, BLUE } from '../../constants/colours';

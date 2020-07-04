@@ -7,8 +7,8 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import SyncStorage from 'sync-storage';
-import Layout from '../components/blocks/Layout.js';
-import SearchInput from '../components/blocks/SearchInput.js';
+import Layout from '../components/blocks/Layout';
+import FindInput from '../components/inputs/FindInput';
 import SelectedProps from '../components/blocks/SelectedProps';
 
 function AddTag({ navigation, route }) {
@@ -93,7 +93,7 @@ function AddTag({ navigation, route }) {
 
   return (
     <Layout title={getTitle()} isScroll={true} goBack={() => navigation.goBack()} loading={false}>
-      <SearchInput
+      <FindInput
         title={'Choose'} property={interest} data={interests}
         setProperty={setInterest} selectProperty={selectInterest} prop={'title'}/>
       <SelectedProps props={selectedInterests} cancelFunc={cancelFunc} />

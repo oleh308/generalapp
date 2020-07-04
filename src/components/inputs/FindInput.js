@@ -16,7 +16,7 @@ const equalPrefix = (str1, str2) => {
   else return false;
 }
 
-function SearchInput ({property, title, setProperty, isPassword=false, data, prop, selectProperty}) {
+function FindInput ({property, title, setProperty, isPassword=false, data, prop, selectProperty}) {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function SearchInput ({property, title, setProperty, isPassword=false, data, pro
       let results = data.filter(single => equalPrefix(single[prop], property));
       setResults(Array.isArray(results) ? results.slice(0, results.length > 5 ? 5 : results.length) : []);
     } catch {
-      console.log('SearchInput.js - useEffect(property):', error.message);
+      console.log('SearchInput.js - useEffect:', error.message);
     }
   }, [property])
 
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SearchInput = React.memo(SearchInput);
+export default FindInput = React.memo(FindInput);

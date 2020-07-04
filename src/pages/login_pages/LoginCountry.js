@@ -9,9 +9,9 @@ import {
 import axios from 'axios';
 import SyncStorage from 'sync-storage';
 import Layout from '../../components/blocks/Layout.js';
-import InputField from '../../components/blocks/InputField.js';
+import FindInput from '../../components/inputs/FindInput.js';
+import InputField from '../../components/inputs/InputField.js';
 import ActionButton from '../../components/buttons/ActionButton';
-import SearchInput from '../../components/blocks/SearchInput.js';
 
 import { BLACK, WHITE, BLUE } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AutheticationContext';
@@ -76,7 +76,7 @@ function LoginCountry({ navigation }) {
 
   return (
     <Layout title={'Country'} isScroll={true} goBack={null} loading={false}>
-      <SearchInput
+      <FindInput
         title={'Country'} property={country} data={countries}
         setProperty={setCountry} selectProperty={selectCountry} prop={'title'}/>
       <InputField title={'City'} property={city} setProperty={setCity} />

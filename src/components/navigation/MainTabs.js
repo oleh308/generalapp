@@ -10,11 +10,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import getMainStack from './MainStack';
 
-import Chats from '../../pages/Chats.js';
 import Search from '../../pages/Search.js';
 import Create from '../../pages/Create.js';
 import Account from '../../pages/Account.js';
 import Timeline from '../../pages/Timeline.js';
+import Chats from '../../pages/chat_pages/Chats.js';
 
 const Tab = createBottomTabNavigator();
 

@@ -8,9 +8,9 @@ import {
 
 import axios from 'axios';
 import SyncStorage from 'sync-storage';
-import Layout from '../../components/blocks/Layout.js';
+import Layout from '../../components/blocks/Layout';
+import FindInput from '../../components/inputs/FindInput';
 import ActionButton from '../../components/buttons/ActionButton';
-import SearchInput from '../../components/blocks/SearchInput.js';
 import SelectedProps from '../../components/blocks/SelectedProps';
 
 import { BLACK, WHITE, BLUE } from '../../constants/colours';

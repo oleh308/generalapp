@@ -29,8 +29,8 @@ function Account({ navigation }) {
     <Layout title={'Account'} isScroll={true} noPadding>
       <TopTabs options={options} tab={tab} setTab={setTab}/>
       {tab === 0 ?
-        <Profile isEditable={true} id={user_id} navigation={navigation}/> :
-        <Settings/>
+        <Profile isEditable={true} id={user_id} navigation={navigation} /> :
+        <Settings id={user_id} navigation={navigation} />
       }
     </Layout>
   )

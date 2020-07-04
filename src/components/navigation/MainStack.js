@@ -1,15 +1,18 @@
 import React from 'react';
-import Post from '../../pages/Post.js';
-import Chats from '../../pages/Chats.js';
-import Search from '../../pages/Search.js';
-import Create from '../../pages/Create.js';
-import AddTag from '../../pages/AddTag.js';
-import Account from '../../pages/Account.js';
-import Timeline from '../../pages/Timeline.js';
-import ChangeAbout from '../../pages/ChangeAbout.js';
-import ProfilePage from '../../pages/ProfilePage.js';
+import Post from '../../pages/Post';
+import Search from '../../pages/Search';
+import Create from '../../pages/Create';
+import AddTag from '../../pages/AddTag';
+import Account from '../../pages/Account';
+import Timeline from '../../pages/Timeline';
+import Chats from '../../pages/chat_pages/Chats';
+import ChangeAbout from '../../pages/ChangeAbout';
+import ProfilePage from '../../pages/ProfilePage';
+import Products from '../../pages/product_pages/Products';
 import SingleChat from '../../pages/chat_pages/SingleChat';
+import AddProduct from '../../pages/product_pages/AddProduct';
 import ChatSettings from '../../pages/chat_pages/ChatSettings';
+import ChatProducts from '../../pages/product_pages/ChatProducts';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -22,11 +25,14 @@ const stackDefault = [
   { name: 'Create', component: Create },
   { name: 'AddTag', component: AddTag },
   { name: 'Account', component: Account },
+  { name: 'Products', component: Products },
   { name: 'Timeline', component: Timeline },
   { name: 'SingleChat', component: SingleChat },
+  { name: 'AddProduct', component: AddProduct },
   { name: 'ProfilePage', component: ProfilePage },
   { name: 'ChangeAbout', component: ChangeAbout },
-  { name: 'ChatSettings', component: ChatSettings }
+  { name: 'ChatSettings', component: ChatSettings },
+  { name: 'ChatProducts', component: ChatProducts }
 ]
 
 const getMainStack = (firstPage) => {

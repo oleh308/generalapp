@@ -13,10 +13,10 @@ import axios from 'axios';
 import SyncStorage from 'sync-storage';
 import Layout from '../components/blocks/Layout';
 import ImagePicker from 'react-native-image-picker';
-import AreaField from '../components/blocks/AreaField';
-import InputField from '../components/blocks/InputField';
+import AreaField from '../components/inputs/AreaField';
+import InputField from '../components/inputs/InputField';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SearchInput from '../components/blocks/SearchInput';
+import SearchInput from '../components/inputs/SearchInput';
 import ActionButton from '../components/buttons/ActionButton';
 import SelectedProps from '../components/blocks/SelectedProps';
 

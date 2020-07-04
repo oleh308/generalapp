@@ -135,6 +135,10 @@ function Profile({ isEditable, id, navigation }) {
     navigation.navigate('ChatsStack', { screen: 'Chats' });
   }
 
+  function navigateProducts() {
+    navigation.navigate('ChatProducts', { user_id: id });
+  }
+
   const getMentorTag = () => {
     const text = isMentor ? 'Mentor' : 'Mentee';
     const style = isMentor ? [styles.profileTag, styles.mentorTag] : [styles.profileTag, styles.menteeTag];
@@ -273,9 +277,8 @@ function Profile({ isEditable, id, navigation }) {
             </View>
             {getFollowActions()}
           </View>
-          {!owner && <ChatActions profile={details} cb={joinChat} />}
+          {!owner && <ChatActions profile={details} cb={joinChat} cb2={navigateProducts}/>}
         </View>
-
       </View>
       <ProfileStats profile={details} />
       <View>

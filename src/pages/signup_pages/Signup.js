@@ -11,8 +11,7 @@ import axios from 'axios';
 import SyncStorage from 'sync-storage';
 import Modal from '../../components/blocks/Modal';
 import Layout from '../../components/blocks/Layout';
-import InputField from '../../components/blocks/InputField';
-import SearchInput from '../../components/blocks/SearchInput';
+import InputField from '../../components/inputs/InputField';
 import ActionButton from '../../components/buttons/ActionButton';
 
 import { BLACK, WHITE, BLUE, GREY } from '../../constants/colours';

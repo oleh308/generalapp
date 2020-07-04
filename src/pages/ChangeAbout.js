@@ -5,11 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
+
 import axios from 'axios';
 import SyncStorage from 'sync-storage';
 import Layout from '../components/blocks/Layout.js';
-import AreaField from '../components/blocks/AreaField';
-import SearchInput from '../components/blocks/SearchInput.js';
+import AreaField from '../components/inputs/AreaField';
 import SelectedProps from '../components/blocks/SelectedProps';
 
 function ChangeAbout({ navigation, route }) {
