@@ -24,6 +24,7 @@ import MyTextMessages from '../../components/messages/MyTextMessages';
 
 import { groupBy } from 'lodash';
 import { BLUE, WHITE } from '../../constants/colours';
+import { useIsFocused } from '@react-navigation/native';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
 function SingleChat({ navigation, route }) {
@@ -35,7 +36,9 @@ function SingleChat({ navigation, route }) {
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   };
+
   const scrollView = useRef(null);
+  const isFocused = useIsFocused();
   const [visible, dismiss] = useKeyboard();
   const { api } = useContext(AuthenticationContext);
 
@@ -47,11 +50,13 @@ function SingleChat({ navigation, route }) {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (id) fetchChat();
-    else setLoading(false);
-
     setupSockets();
   }, []);
+
+  useEffect(() => {
+    if (id) fetchChat();
+    else setLoading(false);
+  }, [isFocused])
 
   useEffect(() => {
     if (scrollView.current) {

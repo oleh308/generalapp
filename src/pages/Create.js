@@ -72,7 +72,7 @@ function Create({ navigation, route }) {
 
     data.append("file", {
       type: image.type,
-      name: image.fileName ? image.fileName : 'image' + id + '.' + ext,
+      name: 'image' + (post ? post._id : '') + '.' + ext,
       uri: Platform.OS === "android" ? image.uri : image.uri.replace("file://", "")
     });
 

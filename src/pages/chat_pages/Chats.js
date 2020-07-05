@@ -34,18 +34,20 @@ function Chats({ navigation, route }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isFocused) fetchChats();
+    if (isFocused) {
+      fetchChats();
+    }
   }, [isFocused]);
 
   useEffect(() => {
     const chatRedirect = SyncStorage.get('chatRedirect');
-
+    console.log(chatRedirect)
     if (chatRedirect) {
       const id = chatRedirect;
       SyncStorage.remove('chatRedirect');
       navigation.navigate('SingleChat', { id: id });
     }
-  }, [])
+  }, [isFocused])
 
   async function fetchChats() {
     try {

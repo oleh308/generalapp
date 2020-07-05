@@ -16,22 +16,25 @@ import Profile from '../components/blocks/Profile';
 import Loading from '../components/blocks/Loading';
 import TopTabs from '../components/blocks/TopTabs';
 import Settings from '../components/blocks/Settings';
+import { useIsFocused } from '@react-navigation/native';
 
 const options = ['Profile', 'Settings'];
 
 function Account({ navigation }) {
   const user_id = SyncStorage.get('user_id');
 
-  const [tab, setTab] = useState(1);
+  const isFocused = useIsFocused();
+
+  const [tab, setTab] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const profile = <Profile isEditable={true} id={user_id} navigation={navigation} setLoading={setLoading} />;
+  const settings = <Settings id={user_id} navigation={navigation} />;
+
   return (
-    <Layout title={'Account'} isScroll={true} noPadding>
+    <Layout title={'Account'} isScroll={true} noPadding loading={loading}>
       <TopTabs options={options} tab={tab} setTab={setTab}/>
-      {tab === 0 ?
-        <Profile isEditable={true} id={user_id} navigation={navigation} /> :
-        <Settings id={user_id} navigation={navigation} />
-      }
+      {tab === 0 ? profile : settings}
     </Layout>
   )
 }

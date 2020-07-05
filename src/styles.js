@@ -21,5 +21,10 @@ export const commonStyles = StyleSheet.create({
     shadowOpacity: 0.75,
     shadowColor: 'grey',
     shadowOffset: { height: 0, width: 0 }
-  }
+  },
+  buttonsContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
 });

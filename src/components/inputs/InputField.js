@@ -14,6 +14,7 @@ function InputField ({
   placeholder,
   isPassword=false,
   autoCorrect=false,
+  keyboard='default',
   capitalize="sentences"
 }) {
   return <View style={styles.inputContainer}>
@@ -21,6 +22,7 @@ function InputField ({
     <TextInput
       value={property}
       style={styles.input}
+      keyboardType={keyboard}
       autoCorrect={autoCorrect}
       autoCapitalize={capitalize}
       secureTextEntry={isPassword}

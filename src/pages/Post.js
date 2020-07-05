@@ -10,6 +10,7 @@ import {
 
 import axios from 'axios';
 import moment from 'moment';
+import io from 'socket.io-client';
 import SyncStorage from 'sync-storage';
 import Layout from '../components/blocks/Layout';
 import AreaField from '../components/inputs/AreaField';
@@ -31,21 +32,38 @@ function Post({ navigation, route }) {
 
   const { editable } = route.params;
 
-  const isFocused = useIsFocused();
-  const [comment, setComment] = useState('');
   const [post, setPost] = useState(route.params.post);
   const { title, content, author, created_at, comments, _id, likes, image } = post
   const mylike = likes ? likes.find(like => like.author._id === user_id) : null;
 
-  useEffect(() => {
-    getPost()
-  }, [])
+  const isFocused = useIsFocused();
+  const [socket, setSocket] = useState(null);
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     if (isFocused) {
-      getPost()
+      getPost();
+      setupSockets()
     }
   }, [isFocused])
+
+  function setupSockets() {
+    const socket = io(apiUrl, {
+      transports: ['websocket'],
+      jsonp: false
+    });
+    socket.connect();
+    socket.on('connect', () => {
+      socket.emit('post_init', { id: _id });
+      console.log('connected to socket server');
+    });
+    socket.on('update', data => {
+      getPost();
+      console.log('update requested', data);
+    });
+
+    setSocket(socket);
+  }
 
   async function getPost() {
     try {
@@ -66,7 +84,6 @@ function Post({ navigation, route }) {
         text: comment
       }
       const data = (await axios.post(apiUrl + '/api/comments/' + _id, body, config)).data;
-      getPost();
     } catch (error) {
       if (error.response) {
         console.log('Post.js - sendComment:', error.response.data);
@@ -112,9 +129,9 @@ function Post({ navigation, route }) {
     if (!comments) return [];
 
     if (comments.length === 0) return <Text style={styles.dateText}>No comments</Text>
-
     return comments.map((comment, index) => {
       const name = comment.author && comment.author.name ? comment.author.name : '';
+      if (!comment.author) return void(0);
       return (
         <View key={index} style={styles.comment}>
           <UserImage image={comment.author.image}/>
@@ -316,7 +333,6 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     fontSize: 18,
-    paddingBottom: 8,
     fontWeight: '600'
   },
   postFooter: {

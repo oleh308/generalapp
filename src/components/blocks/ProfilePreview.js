@@ -11,6 +11,8 @@ import SyncStorage from 'sync-storage';
 import Following from '../buttons/Following';
 import SelectedProps from './SelectedProps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { commonStyles } from '../../styles';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
 function ProfilePreview({ profile, navigation, refresh }) {
@@ -58,7 +60,7 @@ function ProfilePreview({ profile, navigation, refresh }) {
   }
 
   return (
-    <TouchableOpacity style={styles.profileContainer} onPress={navigateProfile}>
+    <TouchableOpacity style={[styles.profileContainer, commonStyles.shadow]} onPress={navigateProfile}>
       <Image style={styles.profileImage} source={{ uri: getImageUri(image) }} />
       <View style={styles.profileDetails}>
         <Text style={styles.profileName}>{name + ' ' + surname}</Text>
@@ -74,9 +76,8 @@ function ProfilePreview({ profile, navigation, refresh }) {
 
 const styles = StyleSheet.create({
   profileContainer: {
-    borderWidth: 1,
     paddingTop: 10,
-    borderRadius: 5,
+    borderRadius: 12,
     paddingBottom: 10,
     paddingLeft: '5%',
     paddingRight: '5%',

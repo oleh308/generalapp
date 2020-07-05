@@ -26,7 +26,7 @@ import { ProfileContext } from '../../context/ProfileContext';
 import { BLUE, RED_2, LIGHT_GREY, WHITE } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
-function Profile({ isEditable, id, navigation }) {
+function Profile({ isEditable, id, navigation, setLoading }) {
   const token = SyncStorage.get('token');
   const apiUrl = SyncStorage.get('apiUrl');
   const user_id = SyncStorage.get('user_id');
@@ -52,6 +52,7 @@ function Profile({ isEditable, id, navigation }) {
       const data = (await api.get(apiUrl + '/api/user/' + id, config)).data;
       if (data.followers && data.followers.includes(user_id)) setFollowing(true);
       setDetails(data);
+      if (setLoading) setLoading(false);
     } catch (error) {
       if (error.response) {
         console.log('Profile.js - getUser:', error.response.data);
@@ -118,7 +119,7 @@ function Profile({ isEditable, id, navigation }) {
 
   async function joinChat() {
     try {
-      const data = (await api.post(apiUrl + '/api/chats/join/' + id, {}, config)).data
+      const data = (await api.post(apiUrl + '/api/chats/public/join/' + id, {}, config)).data
 
       navigateChat(data.id);
     } catch (error) {
@@ -136,7 +137,7 @@ function Profile({ isEditable, id, navigation }) {
   }
 
   function navigateProducts() {
-    navigation.navigate('ChatProducts', { user_id: id });
+    navigation.navigate('ChatProducts', { id: id });
   }
 
   const getMentorTag = () => {

@@ -21,7 +21,7 @@ function LogMessage({ block }) {
       return getName(block.author) + ' left.';
     } else if (message.type === 'userJoined') {
       return getName(block.author) + ' joined.';
-    } else if (message.type === 'userJoined') {
+    } else if (message.type === 'userRemoved') {
       return message.text + ' was kicked out.';
     }
   }
