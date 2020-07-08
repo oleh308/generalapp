@@ -68,6 +68,8 @@ function Post({ navigation, route }) {
   async function getPost() {
     try {
       const data = (await axios.get(apiUrl + '/api/posts/' + _id, config)).data;
+      console.log('here');
+      console.log(data);
       setPost(data);
     } catch (error) {
       if (error.response) {

@@ -54,12 +54,14 @@ function ChatProducts({ navigation, route }) {
 
   async function pay(product) {
     try {
-      let date = moment();
-      date.add(product.duration, 'days');
-      date = date.format();
-      console.log(date);
-
-      const data = (await api.post(apiUrl + '/api/chats/private/join/' + id, { date }, config)).data;
+      // let date = moment();
+      // date.add(product.duration, 'days');
+      // date = date.format();
+      // console.log(date);
+      const body ={
+        product_id: product._id
+      }
+      const data = (await api.post(apiUrl + '/api/chats/private/join/' + id, body, config)).data;
       console.log(data);
       navigateChat(data.id);
     } catch (error) {

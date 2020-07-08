@@ -12,6 +12,7 @@ function InputField ({
   property,
   setProperty,
   placeholder,
+  editable=true,
   isPassword=false,
   autoCorrect=false,
   keyboard='default',
@@ -21,18 +22,23 @@ function InputField ({
     <Text style={styles.inputHeader}>{title}</Text>
     <TextInput
       value={property}
+      editable={editable}
       style={styles.input}
       keyboardType={keyboard}
       autoCorrect={autoCorrect}
       autoCapitalize={capitalize}
       secureTextEntry={isPassword}
       onChangeText={text => setProperty(text)}
+      pointerEvents={editable ? "auto" : "none"}
       placeholder={placeholder ? placeholder : title}
     />
   </View>
 }
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    flex: 1
+  },
   input: {
     height: 50,
     elevation: 1,

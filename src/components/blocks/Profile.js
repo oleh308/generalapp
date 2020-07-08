@@ -26,7 +26,7 @@ import { ProfileContext } from '../../context/ProfileContext';
 import { BLUE, RED_2, LIGHT_GREY, WHITE } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
-function Profile({ isEditable, id, navigation, setLoading }) {
+function Profile({ isEditable, user, update, navigation, setLoading }) {
   const token = SyncStorage.get('token');
   const apiUrl = SyncStorage.get('apiUrl');
   const user_id = SyncStorage.get('user_id');
@@ -37,34 +37,10 @@ function Profile({ isEditable, id, navigation, setLoading }) {
 
   const isFocused = useIsFocused();
   const [edit, setEdit] = useState(null);
-  const [details, setDetails] = useState(null);
-  const [following, setFollowing] = useState(false);
+  const [following, setFollowing] = useState(user.followers && user.followers.includes(user_id));
 
-  const owner = user_id === id;
-  const isMentor = details && details.mentor && details.mentor.status === 'approved';
-
-  useEffect(() => {
-    if (isFocused) getUser();
-  }, [isFocused]);
-
-  async function getUser() {
-    try {
-      const data = (await api.get(apiUrl + '/api/user/' + id, config)).data;
-      if (data.followers && data.followers.includes(user_id)) setFollowing(true);
-      setDetails(data);
-      if (setLoading) setLoading(false);
-    } catch (error) {
-      if (error.response) {
-        console.log('Profile.js - getUser:', error.response.data);
-      } else {
-        console.log('Profile.js - getUser:', error.message);
-      }
-    }
-  }
-
-  function refresh() {
-    setDetails({...details});
-  }
+  const owner = user_id === user._id;
+  const isMentor = user && user.mentor && user.mentor.status === 'approved';
 
   async function uploadImage(image) {
     try {
@@ -77,10 +53,10 @@ function Profile({ isEditable, id, navigation, setLoading }) {
         uri: Platform.OS === "android" ? image.uri : image.uri.replace("file://", "")
       });
 
-      const response = (await api.post(apiUrl + '/api/user/image/' + id, data, config)).data;
+      const response = (await api.post(apiUrl + '/api/users/image/' + id, data, config)).data;
       if (response.success) {
-        details.image = response.image;
-        setDetails({...details});
+        user.image = response.image;
+        update({...user});
       }
     } catch (error) {
       if (error.response) {
@@ -137,7 +113,7 @@ function Profile({ isEditable, id, navigation, setLoading }) {
   }
 
   function navigateProducts() {
-    navigation.navigate('ChatProducts', { id: id });
+    navigation.navigate('ChatProducts', { id: user._id });
   }
 
   const getMentorTag = () => {
@@ -153,17 +129,24 @@ function Profile({ isEditable, id, navigation, setLoading }) {
 
   const getPost = (post, index) => {
     post.author = {
-      name: details.name,
-      image: details.image,
-      surname: details.surname,
+      name: user.name,
+      image: user.image,
+      surname: user.surname,
     }
     return (
-      <TimelinePost key={index} post={post} navigation={navigation} owner={true} isEditable={isEditable} refresh={refresh}/>
+      <TimelinePost
+        key={index}
+        post={post}
+        owner={true}
+        isEditable={isEditable}
+        navigation={navigation}
+        refresh={() => update({...user})}
+      />
     )
   }
 
   function EditableTags({ children, type, tags }) {
-    const cb = () => navigation.navigate('AddTag', { type, tags, cb: getUser });
+    const cb = () => navigation.navigate('AddTag', { type, tags });
 
     return isEditable ?
       <TouchableOpacity onPress={cb}>
@@ -173,10 +156,7 @@ function Profile({ isEditable, id, navigation, setLoading }) {
   }
 
   function EditableAbout({ children }) {
-    navigation.setOptions({
-      test: getUser
-    })
-    const cb = () => navigation.navigate('ChangeAbout', { aboutPrev: details.about });
+    const cb = () => navigation.navigate('ChangeAbout', { aboutPrev: user.about });
 
     return isEditable ?
       <TouchableOpacity onPress={cb}>
@@ -221,18 +201,18 @@ function Profile({ isEditable, id, navigation, setLoading }) {
     if (!isMentor) return void(0)
 
     return (
-      <EditableTags type={'areas'} tags={details.mentor.areas}>
+      <EditableTags type={'areas'} tags={user.mentor.areas}>
         <Text style={styles.profileTitle}>Expertises</Text>
         <View style={styles.areasContainer}>
-          {getTags(details.mentor.areas)}
+          {getTags(user.mentor.areas)}
         </View>
       </EditableTags>
     )
   }
 
   function getImageUri() {
-    if (details.image) {
-      return apiUrl + '/api/image/' + details.image + `?${new Date().getTime()}`;
+    if (user.image) {
+      return apiUrl + '/api/image/' + user.image + `?${new Date().getTime()}`;
     } else {
       return "https://via.placeholder.com/200x200";
     }
@@ -259,11 +239,11 @@ function Profile({ isEditable, id, navigation, setLoading }) {
       <Follow follow={toggleFollow} />
   }
 
-  return details ?
+  return user ?
     <View style={styles.profileContainer}>
       <View style={styles.profileHeader}>
         <EditableImage>
-          {details.image ?
+          {user.image ?
             <Image style={styles.profileImage} source={{ uri: getImageUri() }}  /> :
             <View style={styles.profileDummy}>
               <Ionicons name="ios-person" size={64} color={LIGHT_GREY}/>
@@ -273,32 +253,32 @@ function Profile({ isEditable, id, navigation, setLoading }) {
         <View style={styles.headerRight}>
           <View style={styles.headerRightTop}>
             <View style={styles.headerRightTopFirst}>
-              <Text style={styles.profileName}>{details.name + ' ' + details.surname}</Text>
-              {getMentorTag(details)}
+              <Text style={styles.profileName}>{user.name + ' ' + user.surname}</Text>
+              {getMentorTag(user)}
             </View>
             {getFollowActions()}
           </View>
-          {!owner && <ChatActions profile={details} cb={joinChat} cb2={navigateProducts}/>}
+          {!owner && <ChatActions profile={user} cb={joinChat} cb2={navigateProducts}/>}
         </View>
       </View>
-      <ProfileStats profile={details} />
+      <ProfileStats profile={user} />
       <View>
         {getAreas()}
-        <EditableTags type={'interests'} tags={details.interests}>
+        <EditableTags type={'interests'} tags={user.interests}>
           <Text style={styles.profileTitle}>Interests</Text>
           <View style={styles.areasContainer}>
-            {getTags(details.interests)}
+            {getTags(user.interests)}
           </View>
         </EditableTags>
         <EditableAbout type={'about'}>
           <Text style={styles.profileTitle}>About</Text>
-          {getAbout(details.about)}
+          {getAbout(user.about)}
         </EditableAbout>
         {isMentor && <Fragment>
           <Text style={styles.profileTitle}>Recent posts</Text>
           <View>
-            {details.posts.map(getPost)}
-            {details.posts.length === 0 && <Text style={styles.addAbout}>No posts yet</Text>}
+            {user.posts.map(getPost)}
+            {user.posts.length === 0 && <Text style={styles.addAbout}>No posts yet</Text>}
           </View>
         </Fragment>}
       </View>
@@ -439,4 +419,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Profile
+export default Profile = React.memo(Profile);

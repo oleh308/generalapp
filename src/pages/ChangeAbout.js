@@ -30,10 +30,8 @@ function ChangeAbout({ navigation, route }) {
         about
       };
 
-      const response = (await axios.put(apiUrl + '/api/user/' + user_id, data, config)).data;
-      if (response.success) {
-        navigation.goBack();
-      }
+      const response = (await axios.put(apiUrl + '/api/users/' + user_id, data, config)).data;
+      navigation.goBack();
     } catch (error) {
       let message = error.message;
       if (error.response)

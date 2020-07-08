@@ -10,8 +10,10 @@ import ChangeAbout from '../../pages/ChangeAbout';
 import ProfilePage from '../../pages/ProfilePage';
 import Products from '../../pages/product_pages/Products';
 import SingleChat from '../../pages/chat_pages/SingleChat';
+import Calendar from '../../pages/calendar_pages/Calendar';
 import AddProduct from '../../pages/product_pages/AddProduct';
 import ChatSettings from '../../pages/chat_pages/ChatSettings';
+import CreateSession from '../../pages/chat_pages/CreateSession';
 import ChatProducts from '../../pages/product_pages/ChatProducts';
 
 import { createStackNavigator } from '@react-navigation/stack';
@@ -27,12 +29,14 @@ const stackDefault = [
   { name: 'Account', component: Account },
   { name: 'Products', component: Products },
   { name: 'Timeline', component: Timeline },
+  { name: 'Calendar', component: Calendar },
   { name: 'SingleChat', component: SingleChat },
   { name: 'AddProduct', component: AddProduct },
   { name: 'ProfilePage', component: ProfilePage },
   { name: 'ChangeAbout', component: ChangeAbout },
   { name: 'ChatSettings', component: ChatSettings },
-  { name: 'ChatProducts', component: ChatProducts }
+  { name: 'ChatProducts', component: ChatProducts },
+  { name: 'CreateSession', component: CreateSession },
 ]
 
 const getMainStack = (firstPage) => {

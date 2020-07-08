@@ -48,6 +48,7 @@ const Login: () => React$Node = ({ login, navigation }) => {
         console.log('error');
       }
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         let response = error.response.data;
 
@@ -63,7 +64,6 @@ const Login: () => React$Node = ({ login, navigation }) => {
       }
       console.log('Signup.js - signup:', error.message);
     }
-    setLoading(false);
   }
 
   function navigateSignup(isMentor) {
@@ -91,7 +91,6 @@ const Login: () => React$Node = ({ login, navigation }) => {
 const styles = StyleSheet.create({
   loginContainer: {
     width: '100%',
-    height: '100%',
     paddingLeft: '5%',
     paddingRight: '5%',
     justifyContent: 'flex-start'

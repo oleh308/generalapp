@@ -41,7 +41,6 @@ function Chats({ navigation, route }) {
 
   useEffect(() => {
     const chatRedirect = SyncStorage.get('chatRedirect');
-    console.log(chatRedirect)
     if (chatRedirect) {
       const id = chatRedirect;
       SyncStorage.remove('chatRedirect');

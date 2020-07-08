@@ -36,10 +36,10 @@ function AddProduct({ navigation, route }) {
   const [cost, setCost] = useState(product ? product.cost : 1);
   const [title, setTitle] = useState(product ? product.title : '');
   const [content, setContent] = useState(product ? product.content : '');
-  const [duration, setDuration] = useState(product ? product.duration : 1);
+  const [amount, setAmount] = useState(product ? product.amount : 1);
 
   useEffect(() => {
-    if (!visible && duration === 0) setDuration(1);
+    if (!visible && amount === 0) setAmount(1);
   }, [visible]);
 
   async function createProduct() {
@@ -89,7 +89,7 @@ function AddProduct({ navigation, route }) {
       cost: cost,
       title: title,
       content: content,
-      duration: duration
+      amount: amount
     };
   }
 
@@ -133,10 +133,10 @@ function AddProduct({ navigation, route }) {
     navigation.goBack();
   }
 
-  function manageDuration(text) {
+  function manageAmount(text) {
     text = text.replace(/\D/g,'');
 
-    setDuration(Number(text));
+    setAmount(Number(text));
   }
 
   function manageCost(text) {
@@ -160,22 +160,24 @@ function AddProduct({ navigation, route }) {
 
   return (
     <Layout title={product ? 'Edit product' : 'Create product'} goBack={goBack}>
-      <InputField title={'Title'} property={title} setProperty={setTitle} />
-      <AreaField title={'Content'} property={content} setProperty={setContent} />
-      <InputField
-        keyboard={'number-pad'}
-        title={'Duration (days)'}
-        property={String(duration)}
-        setProperty={manageDuration}
-      />
-      <InputField
-        title={'Cost ($)'}
-        keyboard={'number-pad'}
-        property={String(cost)}
-        setProperty={manageCost}
-      />
-      <View style={commonStyles.buttonsContainer}>
-        {product ? getEditButtons() : getCreateButtons()}
+      <View>
+        <InputField title={'Title'} property={title} setProperty={setTitle} />
+        <AreaField title={'Content'} property={content} setProperty={setContent} />
+        <InputField
+          keyboard={'number-pad'}
+          title={'Amount sessions'}
+          property={String(amount)}
+          setProperty={manageAmount}
+        />
+        <InputField
+          title={'Cost ($)'}
+          keyboard={'number-pad'}
+          property={String(cost)}
+          setProperty={manageCost}
+        />
+        <View style={commonStyles.buttonsContainer}>
+          {product ? getEditButtons() : getCreateButtons()}
+        </View>
       </View>
       {alert && <Modal alert={alert} />}
     </Layout>

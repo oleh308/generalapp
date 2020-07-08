@@ -8,7 +8,7 @@ import {
 import SyncStorage from 'sync-storage';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
-function Settings({ navigation, id }) {
+function Settings({ navigation, user }) {
   const { setAuthenticated } = useContext(AuthenticationContext);
 
   function logout() {
@@ -23,14 +23,14 @@ function Settings({ navigation, id }) {
   }
 
   function openProducts() {
-    navigation.navigate('Products', { id: id });
+    navigation.navigate('Products', { id: user._id });
   }
 
   return (
     <View style={styles.settingsContainer}>
-      <TouchableOpacity style={[styles.settingButton, styles.borderBottom]} onPress={openProducts}>
+      {user.mentor && <TouchableOpacity style={[styles.settingButton, styles.borderBottom]} onPress={openProducts}>
         <Text>Products</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
       <TouchableOpacity style={[styles.settingButton, styles.borderBottom]} onPress={() => {}}>
         <Text>Subscriptions</Text>
       </TouchableOpacity>

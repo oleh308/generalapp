@@ -15,6 +15,7 @@ import Create from '../../pages/Create.js';
 import Account from '../../pages/Account.js';
 import Timeline from '../../pages/Timeline.js';
 import Chats from '../../pages/chat_pages/Chats.js';
+import Calendar from '../../pages/calendar_pages/Calendar.js';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +31,7 @@ function MainTabs({ isMentor }) {
             else if (route.name === 'ChatsStack') { iconName = 'ios-text' }
             else if (route.name === 'AccountStack') { iconName = 'ios-contact' }
             else if (route.name === 'CreateStack') { iconName = 'ios-create' }
+            else if (route.name === 'CalendarStack') { iconName = 'ios-calendar' }
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -46,6 +48,7 @@ function MainTabs({ isMentor }) {
         <Tab.Screen name="TimelineStack" component={getMainStack('Timeline')} />
         <Tab.Screen name="SearchStack" component={getMainStack('Search')} />
         {isMentor && <Tab.Screen name="CreateStack" component={getMainStack('Create')} />}
+        <Tab.Screen name="CalendarStack" component={getMainStack('Calendar')} />
         <Tab.Screen name="ChatsStack" component={getMainStack('Chats')} />
         <Tab.Screen name="AccountStack" component={getMainStack('Account')} />
       </Tab.Navigator>

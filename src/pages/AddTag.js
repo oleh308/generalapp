@@ -13,7 +13,7 @@ import SelectedProps from '../components/blocks/SelectedProps';
 
 function AddTag({ navigation, route }) {
   const apiUrl = SyncStorage.get('apiUrl');
-  const { type, tags, cb } = route.params;
+  const { type, tags } = route.params;
 
   const [interest, setInterest] = useState('');
   const [interests, setInterests] = useState([]);
@@ -29,9 +29,10 @@ function AddTag({ navigation, route }) {
       setInterests(data);
     } catch (error) {
       if (error.response) {
-        console.log(error.response.data)
+        console.log('AddTag - fetchInterests:', error.response.data);
+      } else {
+        console.log('AddTag - fetchInterests:', error.message);
       }
-      console.log('AddTag - fetchInterests:', error.message);
     }
   }
 
@@ -60,16 +61,15 @@ function AddTag({ navigation, route }) {
       let data = {};
       let suburl = '';
       if (type === 'areas') {
-        suburl = '/api/mentor/';
+        suburl = '/api/users/' + user_id + '/mentor';
         data.areas = selectedInterests
       } else if (type === 'interests') {
-        suburl = '/api/user/';
+        suburl = '/api/users/' + user_id;
         data.interests = selectedInterests
       }
 
-      const response = (await axios.put(apiUrl + suburl + user_id, data, config)).data;
+      const response = (await axios.put(apiUrl + suburl, data, config)).data;
       if (response.success) {
-        cb();
         navigation.goBack();
       }
     } catch (error) {

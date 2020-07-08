@@ -12,8 +12,8 @@ import { RED_2 } from '../../constants/colours';
 function ProductView({ product, cb, extraButtons }) {
 
   function getCost() {
-    const daysText = product.duration === 1 ? 'day' : 'days';
-    return `$${product.cost} for ${product.duration} ${daysText}`;
+    const sessionsText = product.amount === 1 ? 'session' : 'sessions';
+    return `$${product.cost} for ${product.amount} ${sessionsText}`;
   }
 
   return (

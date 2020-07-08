@@ -80,7 +80,7 @@ function Timeline({ navigation }) {
 
   const fetchUser = async () => {
     try {
-      const data = (await api.get(apiUrl + '/api/user/' + user_id, config)).data;
+      const data = (await api.get(apiUrl + '/api/users/' + user_id, config)).data;
       setupSockets(data.following);
     } catch (error) {
       if (error.response) {

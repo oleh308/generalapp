@@ -8,7 +8,7 @@ import {
 import { LIGHT_GREY } from '../../constants/colours';
 
 function ProfileStats({ profile }) {
-  const peopleInChat = profile.in_chat ? profile.in_chat : 0;
+  const peopleInChat = profile.chat_users ? profile.chat_users : 0;
   const amountOfPrivate = profile.clients ? profile.clients : 0;
   const following = profile.following ? profile.following.length : 0;
   const followers = profile.followers ? profile.followers.length : 0;

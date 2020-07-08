@@ -11,13 +11,17 @@ import SyncStorage from 'sync-storage';
 import Modal from '../../components/blocks/Modal';
 import Layout from '../../components/blocks/Layout';
 import TopTabs from '../../components/blocks/TopTabs';
-import ActionButton from '../../components/buttons/ActionButton';
 import UserImage from '../../components/blocks/UserImage';
+import SessionView from '../../components/blocks/SessionView';
+import ActionButton from '../../components/buttons/ActionButton';
+
+import { RED_2, BLUE } from '../../constants/colours';
+import { useIsFocused } from '@react-navigation/native';
+import { getImageUri, getName } from '../../utils/user.js';
 import { AuthenticationContext } from '../../context/AutheticationContext';
 
-import { getImageUri, getName } from '../../utils/user.js';
-
 const options = ['Topics', 'Users'];
+const options2 = ['Topics', 'Sessions'];
 
 function ChatSettings({ navigation, route }) {
   const token = SyncStorage.get('token');
@@ -32,12 +36,19 @@ function ChatSettings({ navigation, route }) {
     headers: { Authorization: `Bearer ${token}` }
   };
 
+  const isFocused = useIsFocused();
   const { api } = useContext(AuthenticationContext);
 
   const [tab, setTab] = useState(0);
   const [alert, setAlert] = useState(null);
   const [chat, setChat] = useState(chatInit);
+  const [sessions, setSessions] = useState([]);
   const [opened, setOpened] = useState([false, false]);
+
+  useEffect(() => {
+    if (chat.product && chat.type === 'private' && isFocused) fetchSessions();
+    if (isFocused) fetchChat()
+  }, [isFocused])
 
   async function fetchChat() {
     try {
@@ -52,10 +63,38 @@ function ChatSettings({ navigation, route }) {
     }
   }
 
+  async function fetchSessions() {
+    try {
+      const data = (await api.get(apiUrl + '/api/chats/' + chat._id + '/sessions', config)).data;
+      setSessions(data);
+    } catch (error) {
+      if (error.response) {
+        console.log('ChatSettings.js - fetchSessions:', error.response.data);
+      } else {
+        console.log('ChatSettings.js - fetchSessions:', error.message);
+      }
+    }
+  }
+
+  async function updateStatus(id, status) {
+    try {
+      const body = {
+        status: status
+      }
+      const data = (await api.patch(apiUrl + '/api/sessions/' + id, body, config)).data;
+      fetchSessions();
+    } catch (error) {
+      if (error.response) {
+        console.log('ChatSettings.js - updateStatus:', error.response.data);
+      } else {
+        console.log('ChatSettings.js - updateStatus:', error.message);;
+      }
+    }
+  }
+
   async function leave() {
     try {
       const data = (await api.post(apiUrl + '/api/chats/leave/' + chat._id, {}, config)).data;
-      console.log(data);
       navigation.navigate('Chats');
     } catch (error) {
       if (error.response) {
@@ -115,7 +154,7 @@ function ChatSettings({ navigation, route }) {
         },
         {
           title: 'Confirm',
-          color: 'grey',
+          color: RED_2,
           cb: leave
         }
       ]
@@ -172,11 +211,15 @@ function ChatSettings({ navigation, route }) {
         },
         {
           title: 'Confirm',
-          color: '#DC4747',
+          color: RED_2,
           cb: () => remove(user)
         }
       ]
     })
+  }
+
+  function navigateCreateSession() {
+    navigation.navigate('CreateSession', { chat: chat });
   }
 
   function getLabel(type) {
@@ -233,6 +276,25 @@ function ChatSettings({ navigation, route }) {
     return [];
   }
 
+  function getSessions() {
+    const allowedCreate = sessions.length < chat.product.amount;
+
+    return (
+      <View>
+        {sessions.map((session, index) => <SessionView
+          key={index}
+          chat={chat}
+          session={session}
+          navigation={navigation}
+          updateStatus={updateStatus}
+        />)}
+        {allowedCreate && <TouchableOpacity style={styles.bottomContainer} onPress={navigateCreateSession}>
+          <Text style={styles.createText}>Create session</Text>
+        </TouchableOpacity>}
+      </View>
+    );
+  }
+
   function getUsers() {
     return (
       <Fragment>
@@ -250,7 +312,7 @@ function ChatSettings({ navigation, route }) {
           {getUsersArray(chat.users).map((user, i) => getUserView(user, 'user', i, chat.admins.length === i))}
           {chat.users.length === 0 && getNoUsers('No Users')}
         </View>
-        {!isOwner && <TouchableOpacity style={styles.leaveContainer} onPress={openConfirmLeave}>
+        {!isOwner && <TouchableOpacity style={styles.bottomContainer} onPress={openConfirmLeave}>
           <Text style={styles.leaveText}>Leave chat</Text>
         </TouchableOpacity>}
       </Fragment>
@@ -259,10 +321,10 @@ function ChatSettings({ navigation, route }) {
 
   return (
     <Layout title="Settings" goBack={navigateBack} noPadding>
-      <TopTabs options={options} tab={tab} setTab={setTab}/>
+      <TopTabs options={chat.product ? options2 : options} tab={tab} setTab={setTab}/>
       <View style={styles.contentContainer}>
         {tab === 0 && getTopics()}
-        {tab === 1 && getUsers()}
+        {tab === 1 && (chat.product ? getSessions() : getUsers())}
       </View>
       {alert && <Modal alert={alert} />}
     </Layout>
@@ -314,14 +376,17 @@ const styles = StyleSheet.create({
   gap: {
     width: 5
   },
-  leaveContainer: {
+  bottomContainer: {
     height: 40,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
   },
   leaveText: {
-    color: '#DC4747'
+    color: RED_2
+  },
+  createText: {
+    color: BLUE
   }
 });
 
