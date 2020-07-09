@@ -12,7 +12,7 @@ import ProductView from '../../components/blocks/ProductView';
 
 import { BLUE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function Products({ navigation, route }) {
   const { id } = route.params ? route.params : {};

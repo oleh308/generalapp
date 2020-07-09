@@ -5,6 +5,7 @@ import Create from '../../pages/Create';
 import AddTag from '../../pages/AddTag';
 import Account from '../../pages/Account';
 import Timeline from '../../pages/Timeline';
+import ChangeName from '../../pages/ChangeName';
 import Chats from '../../pages/chat_pages/Chats';
 import ChangeAbout from '../../pages/ChangeAbout';
 import ProfilePage from '../../pages/ProfilePage';
@@ -30,6 +31,7 @@ const stackDefault = [
   { name: 'Products', component: Products },
   { name: 'Timeline', component: Timeline },
   { name: 'Calendar', component: Calendar },
+  { name: 'ChangeName', component: ChangeName },
   { name: 'SingleChat', component: SingleChat },
   { name: 'AddProduct', component: AddProduct },
   { name: 'ProfilePage', component: ProfilePage },

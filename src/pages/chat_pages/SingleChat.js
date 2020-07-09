@@ -25,7 +25,7 @@ import MyTextMessages from '../../components/messages/MyTextMessages';
 import { groupBy } from 'lodash';
 import { BLUE, WHITE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function SingleChat({ navigation, route }) {
   const token = SyncStorage.get('token');
@@ -40,18 +40,13 @@ function SingleChat({ navigation, route }) {
   const scrollView = useRef(null);
   const isFocused = useIsFocused();
   const [visible, dismiss] = useKeyboard();
-  const { api } = useContext(AuthenticationContext);
+  const { api, socket } = useContext(AuthenticationContext);
 
   const [chat, setChat] = useState(null);
   const [images, setImages] = useState([]);
-  const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    setupSockets();
-  }, []);
 
   useEffect(() => {
     if (id) fetchChat();
@@ -64,23 +59,14 @@ function SingleChat({ navigation, route }) {
     }
   }, [visible]);
 
-  function setupSockets() {
-    const socket = io(apiUrl, {
-      transports: ['websocket'],
-      jsonp: false
-    });
-    socket.connect();
-    socket.on('connect', () => {
+  useEffect(() => {
+    if (socket.connected) {
       socket.emit('chat_init', { id: id });
-      console.log('connected to socket server');
-    });
-    socket.on('update', data => {
-      fetchChat();
-      console.log('update requested', data);
-    });
-
-    setSocket(socket);
-  }
+      socket.on('update', data => {
+        fetchChat();
+      });
+    }
+  }, [socket.connected])
 
   async function fetchChat() {
     try {

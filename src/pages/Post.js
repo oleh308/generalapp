@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import SelectedProps from '../components/blocks/SelectedProps';
 
 import { BLUE, WHITE } from '../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
+import { AuthenticationContext } from '../context/AuthenticationContext';
 
 function Post({ navigation, route }) {
   const token = SyncStorage.get('token');
@@ -31,45 +32,34 @@ function Post({ navigation, route }) {
   };
 
   const { editable } = route.params;
+  const { api, socket } = useContext(AuthenticationContext);
 
   const [post, setPost] = useState(route.params.post);
   const { title, content, author, created_at, comments, _id, likes, image } = post
   const mylike = likes ? likes.find(like => like.author._id === user_id) : null;
 
   const isFocused = useIsFocused();
-  const [socket, setSocket] = useState(null);
   const [comment, setComment] = useState('');
 
   useEffect(() => {
     if (isFocused) {
       getPost();
-      setupSockets()
     }
-  }, [isFocused])
+  }, [isFocused]);
 
-  function setupSockets() {
-    const socket = io(apiUrl, {
-      transports: ['websocket'],
-      jsonp: false
-    });
-    socket.connect();
-    socket.on('connect', () => {
+  useEffect(() => {
+    if (socket.connected) {
+      console.log('here')
       socket.emit('post_init', { id: _id });
-      console.log('connected to socket server');
-    });
-    socket.on('update', data => {
-      getPost();
-      console.log('update requested', data);
-    });
-
-    setSocket(socket);
-  }
+      socket.on('update', data => {
+        getPost();
+      });
+    }
+  }, [socket.connected]);
 
   async function getPost() {
     try {
-      const data = (await axios.get(apiUrl + '/api/posts/' + _id, config)).data;
-      console.log('here');
-      console.log(data);
+      const data = (await api.get(apiUrl + '/api/posts/' + _id, config)).data;
       setPost(data);
     } catch (error) {
       if (error.response) {
@@ -85,7 +75,7 @@ function Post({ navigation, route }) {
       const body = {
         text: comment
       }
-      const data = (await axios.post(apiUrl + '/api/comments/' + _id, body, config)).data;
+      const data = (await api.post(apiUrl + '/api/comments/' + _id, body, config)).data;
     } catch (error) {
       if (error.response) {
         console.log('Post.js - sendComment:', error.response.data);
@@ -97,7 +87,7 @@ function Post({ navigation, route }) {
 
   async function like() {
     try {
-      const data = (await axios.post(apiUrl + '/api/likes/' + _id, {}, config)).data;
+      const data = (await api.post(apiUrl + '/api/likes/' + _id, {}, config)).data;
       toggleLike();
     } catch (error) {
       if (error.response) {

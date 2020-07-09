@@ -18,7 +18,7 @@ import ActionButton from '../../components/buttons/ActionButton';
 import { commonStyles } from '../../styles';
 import { BLUE, WHITE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { Calendar as CalendarComp, CalendarList, Agenda } from 'react-native-calendars';
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -136,7 +136,7 @@ function Calendar({ navigation }) {
       selectedColor: BLUE,
       disableTouchEvent: true,
     }
-  
+
     return days;
   }
 

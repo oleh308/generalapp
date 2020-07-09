@@ -8,36 +8,51 @@ import {
   StatusBar,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import io from 'socket.io-client';
 import 'react-native-gesture-handler';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-Ionicons.loadFont();
-
 import SyncStorage from 'sync-storage';
 import buildCall from './src/utils/api';
-import { MaterialIndicator } from 'react-native-indicators';
+import useAppState from 'react-native-appstate-hook';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import MainTabs from './src/components/navigation/MainTabs';
 import LoginStack from './src/components/navigation/LoginStack';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthenticationContext } from './src/context/AutheticationContext';
-import './src/utils/api.js';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-SyncStorage.set('apiUrl', 'http://localhost:5000');
+import { MaterialIndicator } from 'react-native-indicators';
+import { NavigationContainer } from '@react-navigation/native';
+import { AuthenticationContext } from './src/context/AuthenticationContext';
+
+import './src/utils/api.js';
+Ionicons.loadFont();
+MaterialIcons.loadFont();
+
+const API_URL = 'http://localhost:5000';
+
+SyncStorage.set('apiUrl', API_URL);
 
 const App: () => React$Node = () => {
+  const [socket, setSocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const { appState } = useAppState();
+
+  useEffect(() => {
+    initSockets();
+  }, [])
 
   useEffect(() => {
     init();
   }, [])
+
+  function initSockets() {
+    const socket = io(API_URL, {
+      transports: ['websocket'],
+      jsonp: false
+    });
+    socket.connect();
+
+    setSocket(socket);
+  }
 
   async function init() {
     const data = await SyncStorage.init();
@@ -62,7 +77,8 @@ const App: () => React$Node = () => {
       return (
         <AuthenticationContext.Provider value={{
           setAuthenticated: setAuthenticated,
-          api: buildCall(setAuthenticated)
+          api: buildCall(setAuthenticated),
+          socket: socket
         }}>
           {authenticated ? <MainTabs isMentor={getIsMentor()}/>
             : <LoginStack />
@@ -82,43 +98,7 @@ const App: () => React$Node = () => {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-  },
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+  }
 });
 
 export default App;

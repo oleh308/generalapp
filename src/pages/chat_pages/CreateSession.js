@@ -16,7 +16,7 @@ import ActionButton from '../../components/buttons/ActionButton';
 
 import { commonStyles } from '../../styles';
 import { WHITE, BLUE } from '../../constants/colours';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { Calendar as CalendarComp, CalendarList, Agenda } from 'react-native-calendars';
 
 function CreateSession({ navigation, route }) {

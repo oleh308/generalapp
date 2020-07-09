@@ -15,7 +15,7 @@ import Profile from '../components/blocks/Profile';
 import TimelinePost from '../components/blocks/TimelinePost';
 
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../context/AutheticationContext';
+import { AuthenticationContext } from '../context/AuthenticationContext';
 
 function ProfilePage({ navigation, route }) {
   const { profile } = route.params;

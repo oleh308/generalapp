@@ -14,7 +14,7 @@ import InputField from '../../components/inputs/InputField';
 import ActionButton from '../../components/buttons/ActionButton';
 
 import { BLACK, WHITE, BLUE } from '../../constants/colours';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 const Login: () => React$Node = ({ login, navigation }) => {
   const apiUrl = SyncStorage.get('apiUrl');

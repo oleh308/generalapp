@@ -19,7 +19,7 @@ import ProfilePreview from '../components/blocks/ProfilePreview';
 import { commonStyles } from '../styles.js';
 import { WHITE, BLUE } from '../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../context/AutheticationContext';
+import { AuthenticationContext } from '../context/AuthenticationContext';
 
 let timeout = null;
 

@@ -15,7 +15,7 @@ import UserImage from '../../components/blocks/UserImage';
 
 import { getImageUri, getName } from '../../utils/user';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 const options = ['Public', 'Private'];
 
@@ -27,7 +27,7 @@ function Chats({ navigation, route }) {
     headers: { Authorization: `Bearer ${token}` }
   };
   const isFocused = useIsFocused();
-  const { api } = useContext(AuthenticationContext);
+  const { api, socket } = useContext(AuthenticationContext);
 
   const [tab, setTab] = useState(0);
   const [chats, setChats] = useState([]);
@@ -38,6 +38,15 @@ function Chats({ navigation, route }) {
       fetchChats();
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (socket.connected && chats.length > 0) {
+      socket.emit('chats_init', { ids: chats.map(chat => chat._id) });
+      socket.on('update', data => {
+        fetchChats();
+      });
+    }
+  }, [socket.connected, chats]);
 
   useEffect(() => {
     const chatRedirect = SyncStorage.get('chatRedirect');
@@ -51,7 +60,6 @@ function Chats({ navigation, route }) {
   async function fetchChats() {
     try {
       const data = (await api.get(apiUrl + '/api/chats', config)).data;
-      console.log(data);
       setChats(data);
     } catch (error) {
       if (error.response) {

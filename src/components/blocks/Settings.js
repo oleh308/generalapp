@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import SyncStorage from 'sync-storage';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function Settings({ navigation, user }) {
   const { setAuthenticated } = useContext(AuthenticationContext);

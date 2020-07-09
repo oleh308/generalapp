@@ -16,7 +16,7 @@ import ActionButton from '../../components/buttons/ActionButton';
 
 import { commonStyles } from '../../styles';
 import { BLUE, WHITE, RED_2 } from '../../constants/colours';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 const message1 = 'The product was successfully created, now users can see it.';
 const message2 = 'The product was successfully updated.';

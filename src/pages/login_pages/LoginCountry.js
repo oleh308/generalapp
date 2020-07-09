@@ -14,7 +14,7 @@ import InputField from '../../components/inputs/InputField.js';
 import ActionButton from '../../components/buttons/ActionButton';
 
 import { BLACK, WHITE, BLUE } from '../../constants/colours';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function LoginCountry({ navigation }) {
   const apiUrl = SyncStorage.get('apiUrl');

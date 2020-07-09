@@ -13,7 +13,7 @@ import SelectedProps from './SelectedProps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { commonStyles } from '../../styles';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function ProfilePreview({ profile, navigation, refresh }) {
   const { api } = useContext(AuthenticationContext);

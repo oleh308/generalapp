@@ -18,7 +18,7 @@ import ActionButton from '../../components/buttons/ActionButton';
 import { RED_2, BLUE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
 import { getImageUri, getName } from '../../utils/user.js';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 const options = ['Topics', 'Users'];
 const options2 = ['Topics', 'Sessions'];

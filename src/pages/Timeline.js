@@ -14,10 +14,9 @@ import postsData from '../placeholders/postsData';
 import TimelinePost from '../components/blocks/TimelinePost';
 
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../context/AutheticationContext';
+import { AuthenticationContext } from '../context/AuthenticationContext';
 
 function Timeline({ navigation }) {
-  const { api } = useContext(AuthenticationContext);
   const token = SyncStorage.get('token');
   const apiUrl = SyncStorage.get('apiUrl');
   const user_id = SyncStorage.get('user_id');
@@ -26,43 +25,29 @@ function Timeline({ navigation }) {
   };
 
   const isFocused = useIsFocused();
+  const { api, socket } = useContext(AuthenticationContext);
 
   const [posts, setPosts] = useState([]);
-  const [socket, setSocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [following, setFollowing] = useState([]);
-  // useEffect(() => {
-  //   fetchData();
-  //   fetchUser();
-  // }, []);
 
   useEffect(() => {
-    if (isFocused) {
-      fetchData();
-      fetchUser();
+    fetchUser();
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (socket.connected && following.length > 0) {
+      socket.emit('timeline_init', { mentors: following });
+      socket.on('update', data => {
+        fetchUser();
+        fetchData();
+      });
     }
-  }, [isFocused])
+  }, [socket.connected, following]);
 
   function refresh() {
     setPosts([...posts])
-  }
-
-  function setupSockets(following) {
-    const socket = io(apiUrl, {
-      transports: ['websocket'],
-      jsonp: false
-    });
-    socket.connect();
-    socket.on('connect', () => {
-      socket.emit('timeline_init', { mentors: following });
-      console.log('connected to socket server');
-    });
-    socket.on('update', data => {
-      fetchData();
-      console.log('update requested', data);
-    });
-
-    setSocket(socket);
   }
 
   const fetchData = async () => {
@@ -81,7 +66,7 @@ function Timeline({ navigation }) {
   const fetchUser = async () => {
     try {
       const data = (await api.get(apiUrl + '/api/users/' + user_id, config)).data;
-      setupSockets(data.following);
+      setFollowing(data.following);
     } catch (error) {
       if (error.response) {
         console.log('Timeline - fetchUser:', error.response.data);

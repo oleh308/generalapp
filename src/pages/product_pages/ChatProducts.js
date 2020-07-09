@@ -15,7 +15,7 @@ import ActionButton from '../../components/buttons/ActionButton';
 
 import { WHITE, BLUE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function ChatProducts({ navigation, route }) {
   const { api } = useContext(AuthenticationContext);

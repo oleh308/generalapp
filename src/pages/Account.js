@@ -18,7 +18,7 @@ import TopTabs from '../components/blocks/TopTabs';
 import Settings from '../components/blocks/Settings';
 
 import { useIsFocused } from '@react-navigation/native';
-import { AuthenticationContext } from '../context/AutheticationContext';
+import { AuthenticationContext } from '../context/AuthenticationContext';
 
 const options = ['Profile', 'Settings'];
 

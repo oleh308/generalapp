@@ -19,12 +19,13 @@ import SelectedProps from './SelectedProps';
 import Following from '../buttons/Following';
 import ImagePicker from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { useIsFocused } from '@react-navigation/native';
 import { ModelContext } from '../../context/ModelContext';
 import { ProfileContext } from '../../context/ProfileContext';
 import { BLUE, RED_2, LIGHT_GREY, WHITE } from '../../constants/colours';
-import { AuthenticationContext } from '../../context/AutheticationContext';
+import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 function Profile({ isEditable, user, update, navigation, setLoading }) {
   const token = SyncStorage.get('token');
@@ -145,6 +146,16 @@ function Profile({ isEditable, user, update, navigation, setLoading }) {
     )
   }
 
+  function EditableName({ children }) {
+    const cb = () => navigation.navigate('ChangeName', { user: user });
+    return isEditable ?
+      <TouchableOpacity style={styles.editNameContainer} onPress={cb}>
+        {children}
+        <MaterialIcons style={styles.editIcon} name="edit" size={20} color={LIGHT_GREY} />
+      </TouchableOpacity> :
+      <View>{children}</View>
+  }
+
   function EditableTags({ children, type, tags }) {
     const cb = () => navigation.navigate('AddTag', { type, tags });
 
@@ -253,7 +264,9 @@ function Profile({ isEditable, user, update, navigation, setLoading }) {
         <View style={styles.headerRight}>
           <View style={styles.headerRightTop}>
             <View style={styles.headerRightTopFirst}>
-              <Text style={styles.profileName}>{user.name + ' ' + user.surname}</Text>
+              <EditableName>
+                <Text style={styles.profileName}>{user.name + ' ' + user.surname}</Text>
+              </EditableName>
               {getMentorTag(user)}
             </View>
             {getFollowActions()}
@@ -416,6 +429,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  editNameContainer: {
+    flexDirection: 'row'
+  },
+  editIcon: {
+    paddingTop: 2,
+    marginLeft: 5
   }
 });
 
