@@ -9,15 +9,17 @@ import {
 
 import moment from 'moment';
 import SyncStorage from 'sync-storage';
-import DatePicker from 'react-native-date-picker'
+import DatePicker from 'react-native-date-picker';
 import Layout from '../../components/blocks/Layout';
+import SlotView from '../../components/blocks/SlotView';
 import InputField from '../../components/inputs/InputField'
 import SessionView from '../../components/blocks/SessionView';
 import ActionButton from '../../components/buttons/ActionButton';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { commonStyles } from '../../styles';
-import { BLUE, WHITE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
+import { BLUE, WHITE, LIGHT_GREY, RED_2 } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 import { Calendar as CalendarComp, CalendarList, Agenda } from 'react-native-calendars';
 
@@ -34,22 +36,17 @@ function Calendar({ navigation }) {
 
   const isFocused = useIsFocused();
 
-  const [modal, setModal] = useState(null);
-  const [time, setTime] = useState(new Date());
   const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(moment(new Date()));
-  const [displayTime1, setDisplayTime1] = useState(null);
-  const [displayTime2, setDisplayTime2] = useState(null);
 
   useEffect(() => {
     if (isFocused) fetchSessions();
   }, [isFocused]);
 
-
   async function fetchSessions() {
     try {
       const data = (await api.get(apiUrl + '/api/sessions', config)).data;
-      console.log(data);
       setSessions(data);
     } catch (error) {
       if (error.response) {
@@ -58,79 +55,57 @@ function Calendar({ navigation }) {
         console.log('Calendar.js - fetchSessions:', error.message);
       }
     }
+    setLoading(false);
   }
 
-  async function updateStatus(id, status) {
+  async function leave(session) {
     try {
       const body = {
-        status: status
+        chat: session.chat
       }
-      const data = (await api.patch(apiUrl + '/api/sessions/' + id, body, config)).data;
+
+      const data = (await api.post(apiUrl + '/api/sessions/' + session._id + '/leave', body, config)).data;
       fetchSessions();
     } catch (error) {
       if (error.response) {
-        console.log('ChatSettings.js - updateStatus:', error.response.data);
+        console.log('Calendar.js - leave:', error.response.data);
       } else {
-        console.log('ChatSettings.js - updateStatus:', error.message);;
+        console.log('Calendar.js - leave:', error.message);
       }
     }
   }
 
-  function openModal(type) {
-    setModal(type);
-  }
+  async function changeStatus(session, status) {
+    try {
+      const body = {
+        status: status
+      }
 
-  function closeModal() {
-    setModal(null)
-  }
-
-  function selectTime() {
-    if (modal === 'from') setDisplayTime1(time);
-    else if (modal === 'until') setDisplayTime2(time);
-    setTime(new Date());
-    setModal(null);
+      const data = (await api.patch(apiUrl + '/api/sessions/' + session._id, body, config)).data;
+      fetchSessions();
+    } catch (error) {
+      if (error.response) {
+        console.log('Calendar.js - cancel:', error.response.data);
+      } else {
+        console.log('Calendar.js - cancel:', error.message);
+      }
+    }
   }
 
   function selectDate(date) {
     setDate(moment.unix(date.timestamp / 1000))
   }
 
-  function getDay() {
-    return days[date.day()];
-  }
-
-  function getTime(type) {
-    if (type === 'from') {
-      return displayTime1 ? moment(displayTime1).format('HH:mm') : '';
-    } else if (type === 'until') {
-      return displayTime2 ? moment(displayTime2).format('HH:mm') : '';
-    }
-  }
-
-  function getSessions() {
-    const todaySessions = sessions.filter(session => moment(session.start_date).isSame(date, 'day'));
-
-    return (
-      <View style={styles.sessionsContainer}>
-        {todaySessions.map((session, index) => <SessionView
-          key={index}
-          chat={null}
-          session={session}
-          navigation={navigation}
-          updateStatus={updateStatus}
-        />)}
-      </View>
-    )
-  }
-
   function getDays() {
-    let days = {}
+    let days = {};
+
     sessions.forEach(session => {
       days[moment(session.start_date).format('YYYY-MM-DD')] = {
         marked: true,
         dotColor: BLUE
       }
     });
+
     days[date.format('YYYY-MM-DD')] = {
       selected: true,
       selectedColor: BLUE,
@@ -140,34 +115,48 @@ function Calendar({ navigation }) {
     return days;
   }
 
-  function getModal() {
+  function getSessionButtons(session) {
+    let button = null;
+
+    if (session.host._id === user_id) {
+      if (session.status === 'active') {
+        button = <ActionButton title={'Cancel'} colour={WHITE} background={RED_2} cb={() => changeStatus(session, 'cancelled')} />
+      } else {
+        button = <ActionButton title={'Activate'} colour={WHITE} background={BLUE} cb={() => changeStatus(session, 'active')} />
+      }
+    } else {
+      button = <ActionButton title={'Leave'} colour={WHITE} background={RED_2} cb={() => leave(session)} />;
+    }
+
     return (
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={modal ? true : false}
-      >
-        <View style={styles.modalBackground}>
-          <TouchableOpacity style={styles.closeBackground} onPress={closeModal}>
-          </TouchableOpacity>
-          <View style={[styles.modalContainer, commonStyles.shadow]}>
-            <DatePicker
-              date={time}
-              mode={'time'}
-              minuteInterval={30}
-              onDateChange={setTime}
+      <View style={commonStyles.buttonsContainer}>
+        {button}
+      </View>
+    );
+  }
+
+  function getSessions() {
+    const daySessions = sessions.filter(session => moment(session.start_date).isSame(date, 'day'));
+
+    return (
+      <View style={styles.sessionsContainer}>
+        {daySessions.map((session, index) => {
+          return (
+            <SlotView
+              key={index}
+              cb={() => {}}
+              slot={session}
+              isSession={true}
+              children={getSessionButtons(session)}
             />
-            <View style={commonStyles.buttonsContainer}>
-              <ActionButton title={'Select'} colour={WHITE} background={BLUE} marginLeft={10} cb={selectTime}/>
-            </View>
-          </View>
-        </View>
-      </Modal>
+          );
+        })}
+      </View>
     )
   }
 
   return (
-    <Layout title="Calendar">
+    <Layout title="Calendar" loading={loading}>
       <CalendarComp
         onDayPress={selectDate}
         style={styles.calendarContainer}
@@ -208,6 +197,19 @@ const styles = StyleSheet.create({
   sessionsContainer: {
     marginTop: 20,
     marginBottom: 75
+  },
+  createSchedule: {
+    height: 75,
+    marginTop: 20,
+    borderWidth: 1,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderStyle: 'dashed',
+    borderColor: LIGHT_GREY,
+    justifyContent: 'center'
+  },
+  createText: {
+    color: LIGHT_GREY
   }
 });
 

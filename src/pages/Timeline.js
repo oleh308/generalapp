@@ -61,6 +61,7 @@ function Timeline({ navigation }) {
         console.log('Timeline - fetchData:', error.message);
       }
     }
+    setLoading(false);
   }
 
   const fetchUser = async () => {
@@ -83,7 +84,7 @@ function Timeline({ navigation }) {
   }
 
   return (
-    <Layout title={'Your network'}>
+    <Layout title={'Your network'} loading={loading}>
       {generateList()}
       <View style={styles.gap}/>
     </Layout>

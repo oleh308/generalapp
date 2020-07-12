@@ -216,8 +216,8 @@ function SingleChat({ navigation, route }) {
 
   function getOtherButton() {
     return {
-      name: 'ios-menu',
-      cb: () => navigation.navigate('ChatSettings', { chat })
+      icon: <Ionicons name={'ios-menu'} size={30} color="grey" />,
+      cb: () => navigation.navigate(chat.type === 'public' ? 'ChatSettings' : 'PrivateSettings', { chat })
     };
   }
 

@@ -10,9 +10,27 @@ import SyncStorage from 'sync-storage';
 import Layout from '../../components/blocks/Layout';
 import ProductView from '../../components/blocks/ProductView';
 
-import { BLUE } from '../../constants/colours';
 import { useIsFocused } from '@react-navigation/native';
+import { BLUE, LIGHT_GREY } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
+
+function getDefaultProduct() {
+  return {
+    cost: 1,
+    title: '',
+    amount: 1,
+    content: '',
+    capacity: 1,
+    mon_slots: [],
+    tue_slots: [],
+    wed_slots: [],
+    thu_slots: [],
+    fri_slots: [],
+    sat_slots: [],
+    sun_slots: [],
+    disabled: []
+  }
+}
 
 function Products({ navigation, route }) {
   const { id } = route.params ? route.params : {};
@@ -52,7 +70,7 @@ function Products({ navigation, route }) {
   }
 
   function openCreate() {
-    navigation.navigate('AddProduct');
+    navigation.navigate('AddProduct', { product: getDefaultProduct() });
   }
 
   function openEdit(product) {
@@ -77,13 +95,18 @@ function Products({ navigation, route }) {
 
 const styles = StyleSheet.create({
   createContainer: {
-    height: 40,
-    flexDirection: 'row',
+    height: 50,
+    marginTop: 10,
+    borderWidth: 1,
+    marginBottom: 10,
+    borderRadius: 12,
     alignItems: 'center',
+    borderStyle: 'dashed',
+    borderColor: LIGHT_GREY,
     justifyContent: 'center'
   },
   createText: {
-    color: BLUE
+    color: LIGHT_GREY
   }
 });
 

@@ -15,6 +15,7 @@ import buildCall from './src/utils/api';
 import useAppState from 'react-native-appstate-hook';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MainTabs from './src/components/navigation/MainTabs';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LoginStack from './src/components/navigation/LoginStack';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -24,6 +25,7 @@ import { AuthenticationContext } from './src/context/AuthenticationContext';
 
 import './src/utils/api.js';
 Ionicons.loadFont();
+FontAwesome.loadFont();
 MaterialIcons.loadFont();
 
 const API_URL = 'http://localhost:5000';

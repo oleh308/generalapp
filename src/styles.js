@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { LIGHT_GREY } from './constants/colours';
 
 export const commonStyles = StyleSheet.create({
   optionsContainer: {
@@ -27,4 +28,18 @@ export const commonStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+  createContainer: {
+    height: 50,
+    marginTop: 10,
+    borderWidth: 1,
+    marginBottom: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderStyle: 'dashed',
+    borderColor: LIGHT_GREY,
+    justifyContent: 'center'
+  },
+  createText: {
+    color: LIGHT_GREY
+  }
 });

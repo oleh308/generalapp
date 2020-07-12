@@ -10,16 +10,20 @@ import SyncStorage from 'sync-storage';
 import useKeyboard from '@rnhooks/keyboard';
 import Modal from '../../components/blocks/Modal';
 import Layout from '../../components/blocks/Layout';
+import SlotView from '../../components/blocks/SlotView';
+import DaysList from '../../components/blocks/DaysList';
 import AreaField from '../../components/inputs/AreaField';
 import InputField from '../../components/inputs/InputField';
 import ActionButton from '../../components/buttons/ActionButton';
 
 import { commonStyles } from '../../styles';
-import { BLUE, WHITE, RED_2 } from '../../constants/colours';
+import { BLUE, WHITE, RED_2, LIGHT_GREY } from '../../constants/colours';
 import { AuthenticationContext } from '../../context/AuthenticationContext';
 
 const message1 = 'The product was successfully created, now users can see it.';
 const message2 = 'The product was successfully updated.';
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const days2 = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 function AddProduct({ navigation, route }) {
   const { api } = useContext(AuthenticationContext);
@@ -28,15 +32,17 @@ function AddProduct({ navigation, route }) {
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   };
-  const product = route.params ? route.params.product : null;
+  const productInit = route.params ? route.params.product : null;
 
   const [visible, dismiss] = useKeyboard();
 
+  const [day, setDay] = useState(0);
   const [alert, setAlert] = useState(null);
-  const [cost, setCost] = useState(product ? product.cost : 1);
-  const [title, setTitle] = useState(product ? product.title : '');
-  const [content, setContent] = useState(product ? product.content : '');
-  const [amount, setAmount] = useState(product ? product.amount : 1);
+  const [cost, setCost] = useState(productInit.cost);
+  const [product, setProduct] = useState(productInit);
+  const [title, setTitle] = useState(productInit.title);
+  const [amount, setAmount] = useState(productInit.amount);
+  const [content, setContent] = useState(productInit.content);
 
   useEffect(() => {
     if (!visible && amount === 0) setAmount(1);
@@ -86,10 +92,11 @@ function AddProduct({ navigation, route }) {
 
   function getBody() {
     return {
+      ...(product._id ? {} : product),
       cost: cost,
       title: title,
+      amount: amount,
       content: content,
-      amount: amount
     };
   }
 
@@ -145,6 +152,43 @@ function AddProduct({ navigation, route }) {
     setCost(Number(text));
   }
 
+  function getSlotsData(index) {
+    const key = days2[index] + '_slots';
+    return product[key];
+  }
+
+  function navigateCreate(day, slot) {
+    navigation.navigate('CreateSlot', { product: product, day: day });
+  }
+
+  function navigateUpdate(day, slot, index) {
+    navigation.navigate('CreateSlot', { product: product, day: day, index: index, slot: slot });
+  }
+
+  function getSlots(day, dayText, slots) {
+    return (
+      <View key={day}>
+        {dayText ? <Text>{dayText + ':'}</Text> : void(0)}
+        {slots.map((slot, index) => {
+          return <SlotView key={index} slot={slot} cb={() => navigateUpdate(day, slot, index)} />
+        })}
+        <TouchableOpacity style={styles.createSlot} onPress={() => navigateCreate(day, null)}>
+          <Text style={styles.createText}>Create slot</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  function getSchedule() {
+    if (day === 0) {
+      return days.map((dayText, index) => {
+        return getSlots(index, dayText, getSlotsData(index));
+      })
+    } else {
+      return getSlots(day - 1, '', getSlotsData(day - 1))
+    }
+  }
+
   function getEditButtons() {
     return (
       <Fragment>
@@ -160,12 +204,12 @@ function AddProduct({ navigation, route }) {
 
   return (
     <Layout title={product ? 'Edit product' : 'Create product'} goBack={goBack}>
-      <View>
+      <View style={styles.contentContainer}>
         <InputField title={'Title'} property={title} setProperty={setTitle} />
         <AreaField title={'Content'} property={content} setProperty={setContent} />
         <InputField
           keyboard={'number-pad'}
-          title={'Amount sessions'}
+          title={'Amount of sessions'}
           property={String(amount)}
           setProperty={manageAmount}
         />
@@ -175,8 +219,10 @@ function AddProduct({ navigation, route }) {
           property={String(cost)}
           setProperty={manageCost}
         />
+        <DaysList day={day} setDay={setDay} style={{ marginTop: 20 }}/>
+        {getSchedule()}
         <View style={commonStyles.buttonsContainer}>
-          {product ? getEditButtons() : getCreateButtons()}
+          {product._id ? getEditButtons() : getCreateButtons()}
         </View>
       </View>
       {alert && <Modal alert={alert} />}
@@ -185,7 +231,23 @@ function AddProduct({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-
+  contentContainer: {
+    marginBottom: 75
+  },
+  createSlot: {
+    height: 50,
+    marginTop: 10,
+    borderWidth: 1,
+    marginBottom: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderStyle: 'dashed',
+    borderColor: LIGHT_GREY,
+    justifyContent: 'center'
+  },
+  createText: {
+    color: LIGHT_GREY
+  }
 });
 
 export default AddProduct;

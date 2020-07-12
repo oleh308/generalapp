@@ -70,7 +70,7 @@ function Layout({
           <Ionicons name={'ios-arrow-back'} size={24} color={'grey'} />
         </TouchableOpacity>}
         {otherButton && <TouchableOpacity style={styles.otherButton} onPress={otherButton.cb}>
-          <Ionicons name={otherButton.name} size={30} color="grey" />
+          {otherButton.icon}
         </TouchableOpacity>}
       </View>
       <Loading loading={loading}>

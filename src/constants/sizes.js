@@ -1,1 +1,1 @@
-export const TITLE_SIZE = 20;
+export const TITLE_SIZE = 18;

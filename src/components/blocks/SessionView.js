@@ -13,21 +13,13 @@ import ActionButton from '../buttons/ActionButton';
 import { commonStyles } from '../../styles';
 import { BLUE, RED_2, WHITE, LIGHT_GREY, GREEN } from '../../constants/colours';
 
-function SessionView({ session, navigation, chat, updateStatus }) {
+function SessionView({ session, buttons }) {
   const user_id = SyncStorage.get('user_id');
 
   function getDate() {
     const startDate = moment(session.start_date);
 
     return startDate.format('DD MMM');
-  }
-
-  function navigateEdit() {
-    navigation.navigate('CreateSession', { session: session, chat: chat });
-  }
-
-  function update(status) {
-    updateStatus(session._id, status);
   }
 
   function getTime() {
@@ -38,10 +30,12 @@ function SessionView({ session, navigation, chat, updateStatus }) {
   }
 
   function getStatus() {
-    if (session.status === 'pending') {
-      return <Text style={[styles.labelText, styles.pendingText]}>Pending</Text>
-    } else if (session.status === 'approved') {
-      return <Text style={[styles.labelText, styles.approvedText]}>Approved</Text>
+    if (session.status === 'active') {
+      if (moment().isAfter(moment(session.end_date))) {
+        return <Text style={[styles.labelText, styles.doneText]}>Done</Text>
+      } else {
+        return <Text style={[styles.labelText, styles.approvedText]}>Active</Text>
+      }
     } else if (session.status === 'cancelled') {
       return <Text style={[styles.labelText, styles.cancelledText]}>Cancelled</Text>
     } else {
@@ -50,23 +44,23 @@ function SessionView({ session, navigation, chat, updateStatus }) {
   }
 
   function getButtons() {
-    let button = null;
-
-    if (session.status === 'pending') {
-      if (user_id === session.mentor._id) {
-        button = <ActionButton title="Approve" colour={WHITE} background={BLUE} cb={() => update('approved')} />;
-      } else {
-        button = <ActionButton title="Edit" colour={WHITE} background={BLUE} cb={navigateEdit}/>;
-      }
-    } else if (session.status === 'approved') {
-      button = <ActionButton title="Cancel" colour={WHITE} background={RED_2} cb={() => update('cancelled')} />;
-    } else if (session.status === 'cancelled' && user_id === session.user._id) {
-      button = <ActionButton title="Edit" colour={WHITE} background={BLUE} cb={navigateEdit}/>;
-    }
-
+    // let button = null;
+    //
+    // if (session.status === 'pending') {
+    //   if (user_id === session.mentor._id) {
+    //     button = <ActionButton title="Approve" colour={WHITE} background={BLUE} cb={() => update('approved')} />;
+    //   } else {
+    //     button = <ActionButton title="Edit" colour={WHITE} background={BLUE} cb={navigateEdit}/>;
+    //   }
+    // } else if (session.status === 'approved') {
+    //   button = <ActionButton title="Cancel" colour={WHITE} background={RED_2} cb={() => update('cancelled')} />;
+    // } else if (session.status === 'cancelled' && user_id === session.user._id) {
+    //   button = <ActionButton title="Edit" colour={WHITE} background={BLUE} cb={navigateEdit}/>;
+    // }
+    //
     return (
       <View style={commonStyles.buttonsContainer}>
-        {button}
+
       </View>
     )
   }
@@ -78,7 +72,7 @@ function SessionView({ session, navigation, chat, updateStatus }) {
         {getStatus()}
       </View>
       <Text style={styles.timeText}>{getTime()}</Text>
-      {getButtons()}
+      {buttons ? buttons : void(0)}
     </View>
   )
 }
@@ -104,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  pendingText: {
+  doneText: {
     color: LIGHT_GREY,
     borderColor: LIGHT_GREY,
   },

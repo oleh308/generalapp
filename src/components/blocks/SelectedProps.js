@@ -10,9 +10,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { LIGHT_GREY } from '../../constants/colours';
 
-function SelectedInterests({ props, cancelFunc }) {
+function SelectedProps({ props, cancelFunc }) {
   const getProp = (prop, index) => {
-    return <View key={index} style={[styles.singleInterest, cancelFunc ? {} : styles.extraPadding]}>
+    return <View key={index} style={[styles.singleProp, cancelFunc ? {} : styles.extraPadding]}>
       <Text style={styles.propText}>{prop}</Text>
       {cancelFunc && <TouchableOpacity onPress={() => cancelFunc(prop, index)}>
         <Ionicons style={styles.cancelButton} name={'ios-close'} size={24} color={'white'} />
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start'
   },
-  singleInterest: {
+  singleProp: {
     height: 40,
     elevation: 1,
     paddingLeft: 5,
@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SelectedInterests;
+export default SelectedProps;
